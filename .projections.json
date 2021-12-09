@@ -1,0 +1,11 @@
+{
+  "sbk_scraping/*.py":{
+    "alternate": "tests/{dirname}/{basename}_test.py",
+    "path": "sbk_scraping/**",
+    "type": "src"
+  },
+  "tests/*_test.py":{
+    "alternate": "sbk_scraping/{}.py",
+    "path": "sbk_scraping/**"
+  }
+}
