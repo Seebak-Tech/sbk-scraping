@@ -1,7 +1,7 @@
 import pytest
-import warnings
 import re
 from hypothesis import given, strategies as st
+from pydantic import ValidationError
 from sbk_scraping.parser.common import InvalidValue
 from sbk_scraping.parser.dynamic.json_parser import JmesPathParser
 
@@ -17,25 +17,25 @@ test_dict = {
 }
 
 
-#  @pytest.mark.parametrize(
-#      ('json_document', 'srch_list_expressions'),
-#      (
-#          (
-#              '{"key": "value"}', {
-#                  "expr_tag": "people names",
-#                  "expression": 'people[*].first'
-#              }
-#          ),
-#          (test_dict, {'peple[*].first'}),
-#          (test_dict, 3),
-#      ),
-#  )
-#  def test_parameter_failure(json_document, srch_list_expressions):
-#      with pytest.raises(ValidationError):
-#          _ = JmesPathParser(
-#              json_document=json_document,
-#              srch_list_expressions=srch_list_expressions
-#          )
+@pytest.mark.parametrize(
+    ('json_document', 'srch_list_expressions'),
+    (
+        (
+            '{"key": "value"}', {
+                "expr_tag": "people names",
+                "expression": 'people[*].first'
+            }
+        ),
+        (test_dict, {'peple[*].first'}),
+        (test_dict, 3),
+    ),
+)
+def test_parameter_failure(json_document, srch_list_expressions):
+    with pytest.raises(ValidationError):
+        _ = JmesPathParser(
+            json_document=json_document,
+            srch_list_expressions=srch_list_expressions
+        )
 
 
 @pytest.mark.parametrize(
