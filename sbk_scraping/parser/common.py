@@ -1,11 +1,11 @@
 import abc
 from pydantic import BaseModel, constr, root_validator
-from typing import Optional
+from typing import Optional, Any
 
 
 class HttpResponseParser(abc.ABC):
     @abc.abstractmethod
-    def parse(self):
+    def parse(self) -> Any:
         pass
 
 
@@ -16,7 +16,7 @@ class InvalidValue(Exception):
 
 
 class SearchExpression(BaseModel):
-    expr_tag: constr(strip_whitespace=True, regex=r'\w+')
+    target_field: constr(strip_whitespace=True, regex=r'\w+')
     expr_type: constr(strip_whitespace=True, regex=r'\w+')
     srch_expression: constr(strip_whitespace=True, min_length=1)
     expr_description: Optional[str] = None
@@ -25,10 +25,10 @@ class SearchExpression(BaseModel):
     def _check_ommited_srch_expression(cls, field_values):
         field_name = 'SRCH_EXPRESSION'
         has_mandatory_fields = (
-            bool(field_values.get('expr_tag')) and
+            bool(field_values.get('target_field')) and
             bool(field_values.get('srch_expression'))
         )
-        if bool(field_values.get('expr_tag')):
+        if bool(field_values.get('target_field')):
             field_name = 'EXPR_TAG'
         if has_mandatory_fields:
             return field_values

@@ -22,7 +22,7 @@ test_dict = {
     (
         (
             '{"key": "value"}', {
-                "expr_tag": "people names",
+                "target_field": "people names",
                 "expression": 'people[*].first'
             }
         ),
@@ -42,7 +42,7 @@ def test_parameter_failure(json_document, srch_list_expressions):
     ('json_document', 'srch_list_expressions'),
     (
         ({}, [{}]),
-        ({}, [{'expr_tag': 'names', 'expression': 'people[*].first'}]),
+        ({}, [{'target_field': 'names', 'expression': 'people[*].first'}]),
         (test_dict, [{}]),
         (test_dict, [])
     ),
@@ -85,7 +85,7 @@ def json_document_st(text_st=printable_text_st()):
 def qry_expression_st(text_st=printable_text_st()):
     qry_expressions_st = st.fixed_dictionaries(
         mapping={
-            'expr_tag': text_st,
+            'target_field': text_st,
             'expr_type': text_st,
             'srch_expression': text_st
         },
@@ -105,7 +105,7 @@ def test_correct_initialization(json_document, qry_expr_list):
         srch_list_expressions=qry_expr_list
     )
     for index, srch_expression in enumerate(instance.srch_list_expressions):
-        assert srch_expression.expr_tag == qry_expr_list[index]['expr_tag']
+        assert srch_expression.target_field == qry_expr_list[index]['target_field']
         assert srch_expression.expr_type == qry_expr_list[index]['expr_type']
         assert (
             srch_expression

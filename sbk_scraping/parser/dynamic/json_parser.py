@@ -38,6 +38,6 @@ class JmesPathParser(BaseModel, cmn.HttpResponseParser):
                 data=self.json_document
             )
             if bool(qry_result):
-                result.append((qry_expression.expr_tag, qry_result))
+                result.append((qry_expression.target_field, qry_result))
 
         return result
