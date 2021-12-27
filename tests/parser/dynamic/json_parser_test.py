@@ -1,66 +1,11 @@
 import pytest
-import re
 from hypothesis import given, strategies as st
 from pydantic import ValidationError
-from sbk_scraping.parser.common import InvalidValue
 from sbk_scraping.parser.dynamic.json_parser import JmesPathParser
-
-
-test_dict = {
-    "people": [
-        {"first": "James", "last": "d"},
-        {"first": "Jacob", "last": "e"},
-        {"first": "Jayden", "last": "f"},
-        {"missing": "different"}
-    ],
-    "foo": {"bar": "baz"}
-}
-
-
-@pytest.mark.parametrize(
-    ('json_document', 'srch_list_expressions'),
-    (
-        (
-            '{"key": "value"}', {
-                "target_field": "people names",
-                "expression": 'people[*].first'
-            }
-        ),
-        (test_dict, {'peple[*].first'}),
-        (test_dict, 3),
-    ),
+from tests.parser.common_test import (
+    srch_expr_list_st,
+    printable_text_st
 )
-def test_parameter_failure(json_document, srch_list_expressions):
-    with pytest.raises(ValidationError):
-        _ = JmesPathParser(
-            json_document=json_document,
-            srch_list_expressions=srch_list_expressions
-        )
-
-
-@pytest.mark.parametrize(
-    ('json_document', 'srch_list_expressions'),
-    (
-        ({}, [{}]),
-        ({}, [{'target_field': 'names', 'expression': 'people[*].first'}]),
-        (test_dict, [{}]),
-        (test_dict, [])
-    ),
-)
-def test_zero_values(json_document, srch_list_expressions):
-    with pytest.raises(InvalidValue):
-        _ = JmesPathParser(
-            json_document=json_document,
-            srch_list_expressions=srch_list_expressions
-        )
-
-
-def printable_text_st():
-    re_expression = re.compile(r"[a-zA-Z_]+")
-    return st.from_regex(
-        regex=re_expression,
-        fullmatch=True
-    )
 
 
 def json_document_st(text_st=printable_text_st()):
@@ -82,45 +27,64 @@ def json_document_st(text_st=printable_text_st()):
     return json_st
 
 
-def qry_expression_st(text_st=printable_text_st()):
-    qry_expressions_st = st.fixed_dictionaries(
-        mapping={
-            'target_field': text_st,
-            'expr_type': text_st,
-            'srch_expression': text_st
-        },
-        optional={'expr_description': text_st}
-    )
-    return qry_expressions_st
+json_dict = {
+    "people": [
+        {"first": "James", "last": "d"},
+        {"first": "Jacob", "last": "e"},
+        {"first": "Jayden", "last": "f"},
+        {"missing": "different"}
+    ],
+    "foo": {"bar": "baz"}
+}
+
+srch_expr_dict = {
+    "target_field": "names",
+    "expr_type": 'jmes',
+    "srch_expression": "people[*].first"
+}
 
 
-def srch_expr_list_st(qry_expressions=qry_expression_st()):
-    return st.lists(qry_expressions, min_size=1)
+@pytest.mark.parametrize(
+    ('json_document', 'srch_lst_expressions', 'match_expr'),
+    (
+        ({}, [{}], r".*This field is mandatory"),
+        (json_dict, [{}], r".*This field is mandatory"),
+        (json_dict, [], r".*The list should have at least*"),
+        (None, [srch_expr_dict], r".*None is not an allowed*"),
+        (json_dict, srch_expr_dict, r".*This field is not a valid list*"),
+    ),
+)
+def test_validation_errors(json_document, srch_lst_expressions, match_expr):
+    with pytest.raises(
+            ValidationError,
+            match=match_expr
+    ):
+        _ = JmesPathParser(
+            json_document=json_document,
+            srch_list_expressions=srch_lst_expressions
+        )
 
 
-@given(json_document=json_document_st(), qry_expr_list=srch_expr_list_st())
-def test_correct_initialization(json_document, qry_expr_list):
+@given(json_document=json_document_st(), expr_list=srch_expr_list_st())
+def test_correct_initialization(json_document, expr_list):
     instance = JmesPathParser(
         json_document=json_document,
-        srch_list_expressions=qry_expr_list
+        srch_list_expressions=expr_list
     )
-    for index, srch_expression in enumerate(instance.srch_list_expressions):
-        assert srch_expression.target_field == qry_expr_list[index]['target_field']
-        assert srch_expression.expr_type == qry_expr_list[index]['expr_type']
-        assert (
-            srch_expression
-            .srch_expression
-        ) == qry_expr_list[index]['srch_expression']
+    for idx, srch_expr in enumerate(instance.srch_list_expressions):
+        assert srch_expr.target_field == expr_list[idx]['target_field']
+        assert srch_expr.expr_type == expr_list[idx]['expr_type']
+        assert srch_expr.srch_expression == expr_list[idx]['srch_expression']
 
     assert 0 < len(instance.srch_list_expressions)
     assert bool(instance.json_document)
 
 
-@given(json_document=json_document_st(), qry_expr_list=srch_expr_list_st())
-def test_parse_object(json_document, qry_expr_list):
+@given(json_document=json_document_st(), expr_list=srch_expr_list_st())
+def test_parse_object(json_document, expr_list):
     instance = JmesPathParser(
         json_document=json_document,
-        srch_list_expressions=qry_expr_list
+        srch_list_expressions=expr_list
     )
     result = instance.parse()
     assert len(result) <= len(instance.srch_list_expressions)
