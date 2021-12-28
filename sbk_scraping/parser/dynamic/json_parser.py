@@ -7,8 +7,8 @@ class JmesPathParser(cmn.BaseModel, cmn.HttpResponseParser):
     json_document: dict
     srch_list_expressions: conlist(cmn.SearchExpression, min_items=1)
 
-    def parse(self) -> list:
-        result = []
+    def parse(self) -> dict:
+        result = {}
         for qry_expression in self.srch_list_expressions:
             qry_result = jmespath.search(
                 expression=qry_expression.srch_expression,
@@ -16,6 +16,7 @@ class JmesPathParser(cmn.BaseModel, cmn.HttpResponseParser):
             )
             if qry_result in ('', None):
                 continue
-            result.append((qry_expression.target_field, qry_result))
+
+            result[qry_expression.target_field] = qry_result
 
         return result

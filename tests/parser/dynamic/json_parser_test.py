@@ -38,10 +38,32 @@ json_dict = {
 }
 
 srch_expr_dict = {
-    "target_field": "names",
+    "target_field": "first_name",
     "expr_type": 'jmes',
-    "srch_expression": "people[*].first"
+    "srch_expression": "people[?last=='f'].first"
 }
+
+srch_expr_dict2 = {
+    "target_field": "foo",
+    "expr_type": 'jmes',
+    "srch_expression": "foo.bar"
+}
+
+test_data = [(json_dict, [srch_expr_dict, srch_expr_dict2])]
+
+
+@pytest.mark.parametrize("json_dict, srch_expr_dict", test_data)
+def test_jmes_parse(json_dict, srch_expr_dict):
+    expected = {
+        "first_name": ["Jayden"],
+        "foo": "baz"
+    }
+    json_parser = JmesPathParser(
+        json_document=json_dict,
+        srch_list_expressions=srch_expr_dict
+    )
+    result = json_parser.parse()
+    assert result == expected
 
 
 @pytest.mark.parametrize(
@@ -81,10 +103,10 @@ def test_correct_initialization(json_document, expr_list):
 
 
 @given(json_document=json_document_st(), expr_list=srch_expr_list_st())
-def test_parse_object(json_document, expr_list):
+def test_parse_properties(json_document, expr_list):
     instance = JmesPathParser(
         json_document=json_document,
         srch_list_expressions=expr_list
     )
     result = instance.parse()
-    assert len(result) <= len(instance.srch_list_expressions)
+    assert len(result.keys()) <= len(instance.srch_list_expressions)
