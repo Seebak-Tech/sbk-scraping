@@ -29,19 +29,6 @@ def srch_expr_list_st(qry_expressions=qry_expression_st()):
     return st.lists(qry_expressions, min_size=1)
 
 
-def invalid_data_type_st():
-    return st.one_of(
-        st.text(),
-        st.integers(),
-        st.none(),
-        st.booleans()
-    )
-
-
-def invalid_list_st(invalid_data=invalid_data_type_st()):
-    return st.lists(invalid_data, min_size=1)
-
-
 @pytest.mark.parametrize(
     ('srch_expressions', 'match_expr'),
     (
@@ -59,7 +46,7 @@ def invalid_list_st(invalid_data=invalid_data_type_st()):
         ),
     ),
 )
-def test_validation_errors(srch_expressions, match_expr):
+def test_mandatory_fields(srch_expressions, match_expr):
     with pytest.raises(
             ValidationError,
             match=match_expr
