@@ -3,7 +3,7 @@ on: pull_request
 
 jobs:
  
-  poetry-install:
+  on-pull-request:
     runs-on:  ubuntu-latest
     steps:
       #----------------------------------------------
