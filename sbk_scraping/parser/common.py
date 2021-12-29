@@ -15,12 +15,23 @@ class BaseModel(PydanticBaseModel):
                '  *Action: Provide a valid value'
         msg5 = '*Cause: This field is not a valid list\n'\
                '  *Action: Provide an a list object'
+        msg6 = '*Cause: This field should contain at least {limit_value} '\
+               'characters\n'\
+               '  *Action: Ensure this field has the minimum number '\
+               'of characters'
+        msg7 = '*Cause: This field should be a string type\n'\
+               '  *Action: Provide a valid value'
+        msg8 = '*Cause: The field value is not a valid dict\n'\
+               '  *Action: Provide an a dictionary object'
         error_msg_templates = {
             'value_error.missing': msg1,
             'value_error.str.regex': msg2,
             'value_error.list.min_items': msg3,
             'type_error.none.not_allowed': msg4,
             'type_error.list': msg5,
+            'value_error.any_str.min_length': msg6,
+            'type_error.str': msg7,
+            'type_error.dict': msg8,
         }
 
 
@@ -28,18 +39,6 @@ class HttpResponseParser(abc.ABC):
     @abc.abstractmethod
     def parse(self) -> Any:
         pass
-
-
-class InvalidValue(Exception):
-    def __init__(self, message: str) -> None:
-        # Genereates error message
-        super().__init__(message)
-
-
-class InvalidType(Exception):
-    def __init__(self, message: str) -> None:
-        # Genereates error message
-        super().__init__(message)
 
 
 class SearchExpression(BaseModel):
