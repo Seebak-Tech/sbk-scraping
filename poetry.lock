@@ -122,6 +122,23 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "environ-config"
+version = "21.2.0"
+description = "Boilerplate-free configuration with env variables."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+attrs = ">=17.4.0"
+
+[package.extras]
+aws = ["boto3"]
+dev = ["boto3", "pytest", "coverage", "moto", "sphinx", "furo", "pre-commit"]
+docs = ["sphinx", "furo"]
+tests = ["pytest", "coverage", "moto"]
+
+[[package]]
 name = "h2"
 version = "3.2.0"
 description = "HTTP/2 State-Machine based protocol implementation"
@@ -723,7 +740,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "da4b6b5414aeefa004b5214ba8eadfd2bdd1fcaf2ed3ddd4d714025b2eb54adb"
+content-hash = "1a836640356117194019e0206fbfb29b143c090c527ae577e501bdd7ae9e02f2"
 
 [metadata.files]
 appnope = [
@@ -839,6 +856,10 @@ cssselect = [
 decorator = [
     {file = "decorator-5.1.0-py3-none-any.whl", hash = "sha256:7b12e7c3c6ab203a29e157335e9122cb03de9ab7264b137594103fd4a683b374"},
     {file = "decorator-5.1.0.tar.gz", hash = "sha256:e59913af105b9860aa2c8d3272d9de5a56a4e608db9a2f167a8480b323d529a7"},
+]
+environ-config = [
+    {file = "environ-config-21.2.0.tar.gz", hash = "sha256:24bebf69d814a18242483c83a2856f20db1b623eab2d34fb712d3d02f5cd22c8"},
+    {file = "environ_config-21.2.0-py2.py3-none-any.whl", hash = "sha256:638057e2fb73984d62192f9c13510eb5df1d291f95b8923e9dc588453d709dd3"},
 ]
 h2 = [
     {file = "h2-3.2.0-py2.py3-none-any.whl", hash = "sha256:61e0f6601fa709f35cdb730863b4e5ec7ad449792add80d1410d4174ed139af5"},

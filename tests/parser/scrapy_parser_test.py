@@ -1,6 +1,8 @@
 import pytest
+import environ
 from pydantic import ValidationError
 from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
+from sbk_scraping.config import AppConfig
 
 
 data_body_html = '<html><body><span>good</span></body></html>'
@@ -49,8 +51,9 @@ def test_validation_error_messages(html_document, srch_lst_expr, match_msg):
 
 
 @pytest.fixture()
-def body():
-    with open('tests/test_data/book_to_scrape.html') as body_file:
+def html_str():
+    config = environ.to_config(AppConfig)
+    with open(config.testdata/'book_to_scrape.html') as body_file:
         body_data = body_file.read()
     return body_data
 
@@ -76,22 +79,22 @@ def srch_lst_expressions():
     ]
 
 
-def test_parse(body, srch_lst_expressions):
+def test_parse(html_str, srch_lst_expressions):
     expected = {
         "title": ['A Light in the Attic'],
         "price": ['£51.77']
     }
     html_parser = HtmlXmlParser(
-        data_body=body,
+        data_body=html_str,
         srch_list_expressions=srch_lst_expressions
     )
     result = html_parser.parse()
     assert expected == result
 
 
-def test_parse_properties(body, srch_lst_expressions):
+def test_parse_properties(html_str, srch_lst_expressions):
     instance = HtmlXmlParser(
-        data_body=body,
+        data_body=html_str,
         srch_list_expressions=srch_lst_expressions
     )
     result = instance.parse()
