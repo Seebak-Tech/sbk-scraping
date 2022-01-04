@@ -22,7 +22,7 @@ def json_document_st(text_st=printable_text_st()):
         extend=lambda children: (
             st.dictionaries(keys=text_st, values=children, min_size=1)
         ),
-        max_leaves=5
+        max_leaves=3
     )
     return json_st
 
