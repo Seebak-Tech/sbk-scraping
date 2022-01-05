@@ -11,6 +11,8 @@ jobs:
       #----------------------------------------------
     - name: Check out repository
       uses: actions/checkout@v2
+      with:
+        path: '/workspace'
     - name: Set up python 
       uses: actions/setup-python@v2
       with:
@@ -42,7 +44,8 @@ jobs:
       #              set PYTHONPATH env variable   
       #----------------------------------------------  
     - name: Set PYTHONPATH env variable
-      run: echo "PYTHONPATH=/home/runner/work/demo/demo" >> $GITHUB_ENV      
+      run: echo "PYTHONPATH=/workspace/sbk-scraping" >> $GITHUB_ENV   
+      
       #----------------------------------------------
       #              run test suite   
       #----------------------------------------------  
@@ -50,5 +53,3 @@ jobs:
       run: |
         source .venv/bin/activate
         pytest tests/
-        #coverage run -m pytest test/
-        #coverage report
