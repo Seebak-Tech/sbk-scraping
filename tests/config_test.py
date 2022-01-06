@@ -8,15 +8,21 @@ def test_invalid_configuration():
     with pytest.raises(ValueError, match='contains an invalid Path'):
         _ = environ.to_config(
             AppConfig,
-            environ={"APP_ROOTDIR": "/work"}
+            environ={
+                "SBK_WORKSPACE": "/work",
+                "SBK_PROJECTNAME": "sbk-scraping"
+            }
         )
 
 
 def test_config():
     config = environ.to_config(AppConfig)
     env_var = os.environ.get(
-        "APP_ROOTDIR",
-        '/workspace/sbk-scraping'
-    ) + "/tests/test_data"
+        "SBK_WORKSPACE",
+        '/workspace'
+    ) + "/" + os.environ.get(
+        "SBK_PROJECTNAME",
+        'sbk-scraping'
+    ) + "/" + "tests/test_data"
 
     assert env_var == str(config.testdata)

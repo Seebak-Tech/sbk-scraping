@@ -16,17 +16,29 @@ class Env(enum.Enum):
     DEV = "development"
 
 
-@environ.config
+@environ.config(prefix='SBK')
 class AppConfig:
+
+    workspace = environ.var(
+        default='/workspace',
+        converter=Path,
+        validator=ensure_path_exists
+    )
+
+    projectname = environ.var(default='sbk-scraping')
+
     rootdir = environ.var(
-        default="/workspace/sbk-scraping",
+        default=attr.Factory(
+            lambda self: self.workspace/self.projectname,
+            takes_self=True
+        ),
         converter=Path,
         validator=ensure_path_exists
     )
 
     testdata = environ.var(
         default=attr.Factory(
-            lambda self: self.rootdir.cwd()/'tests'/'test_data',
+            lambda self: self.rootdir/'tests'/'test_data',
             takes_self=True
         ),
         validator=ensure_path_exists
