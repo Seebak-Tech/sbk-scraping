@@ -51,9 +51,8 @@ def test_validation_error_messages(html_document, srch_lst_expr, match_msg):
 
 
 @pytest.fixture()
-def html_str():
-    config = environ.to_config(AppConfig)
-    with open(config.testdata/'book_to_scrape.html') as body_file:
+def html_str(test_data):
+    with open(test_data/'book_to_scrape.html') as body_file:
         body_data = body_file.read()
     return body_data
 
