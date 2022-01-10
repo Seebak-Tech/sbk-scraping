@@ -14,6 +14,7 @@ def ensure_path_exists(instance, atribute, path):
 class Env(enum.Enum):
     PROD = "production"
     DEV = "development"
+    TEST = "test"
 
 
 @environ.config(prefix='SBK')

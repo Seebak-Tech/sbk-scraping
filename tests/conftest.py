@@ -1,18 +1,20 @@
 import pytest
 import environ
 from sbk_scraping.config import AppConfig
-from pathlib import Path
 
 
-@pytest.fixture()
-def test_data():
-    config = environ.to_config(AppConfig)
-    path = Path(config.testdata)
-    return path
+@pytest.fixture(scope="session")
+def config():
+    config = environ.to_config(
+        AppConfig,
+        environ={
+            "SBK_ENV": "test"
+        }
+    )
+    return config
 
 
-@pytest.fixture()
-def valid_path():
-    config = environ.to_config(AppConfig)
-    path = Path(config.testdata/'srch_expressions.json')
+@pytest.fixture(scope="session")
+def test_data(config):
+    path = config.testdata
     return path
