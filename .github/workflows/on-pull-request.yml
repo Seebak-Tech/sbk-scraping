@@ -4,13 +4,6 @@ on: pull_request
 jobs:
  
   on-pull-request:
-    env:
-      #----------------------------------------------
-      #         set environment variables   
-      #----------------------------------------------  
-      SBK_PROJECTNAME: sbk-scraping
-      SBK_WORKDIR: /home/runner/work/sbk-scraping
-      
     runs-on:  ubuntu-latest
     steps:
       #----------------------------------------------
@@ -45,7 +38,15 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction
-      
+      #----------------------------------------------
+      #         set environment variables   
+      #----------------------------------------------  
+    - name: Set PYTHONPATH env variable
+      run: echo "PYTHONPATH=/home/runner/work/sbk-scraping/sbk-scraping" >> $GITHUB_ENV   
+    - name: Set SBK_PROJECTNAME env variable
+      run: echo "SBK_PROJECTNAME=sbk-scraping" >> $GITHUB_ENV         
+    - name: Set SBK_WORKDIR env variable
+      run: echo "SBK_WORKDIR=/home/runner/work/sbk-scraping" >> $GITHUB_ENV         
       #----------------------------------------------
       #              run test suite   
       #----------------------------------------------  
