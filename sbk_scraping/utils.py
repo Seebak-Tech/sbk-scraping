@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+import environ
+from sbk_scraping.config import AppConfig
 
 
 def ensure_path_exists(path: Path):
@@ -16,6 +18,9 @@ def load_json_file(path: Path) -> dict:
     return data
 
 
-def load_srch_expressions(srch_expr_path: Path) -> dict:
-    data = load_json_file(srch_expr_path/'srch_expressions.json')
-    return data.get('srch_expressions', {})
+def read_parsers(config) -> dict:
+    path = config.rootdir
+    if config.env.name == 'TEST':
+        path = config.testdata
+    data = load_json_file(path/'parsers.json')
+    return data

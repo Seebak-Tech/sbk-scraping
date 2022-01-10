@@ -14,6 +14,7 @@ def ensure_path_exists(instance, atribute, path):
 class Env(enum.Enum):
     PROD = "production"
     DEV = "development"
+    TEST = "test"
 
 
 @environ.config(prefix='SBK')
@@ -44,4 +45,4 @@ class AppConfig:
         validator=ensure_path_exists
     )
 
-    env = environ.var(default="development", converter=Env)
+    env = environ.var(default="test", converter=Env)

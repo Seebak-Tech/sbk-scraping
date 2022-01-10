@@ -47,6 +47,8 @@ jobs:
       run: echo "SBK_PROJECTNAME=sbk-scraping" >> $GITHUB_ENV         
     - name: Set SBK_WORKDIR env variable
       run: echo "SBK_WORKDIR=/home/runner/work/sbk-scraping" >> $GITHUB_ENV         
+    - name: Set SBK_ENV env variable
+      run: echo "SBK_ENV=test" >> $GITHUB_ENV         
       #----------------------------------------------
       #              run test suite   
       #----------------------------------------------  

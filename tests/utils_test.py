@@ -2,8 +2,7 @@ import pytest
 from pathlib import Path
 from sbk_scraping.utils import (
     ensure_path_exists,
-    load_json_file,
-    load_srch_expressions
+    read_parsers
 )
 
 
@@ -16,15 +15,7 @@ def test_ensure_path_exists():
         _ = ensure_path_exists(invalid_path)
 
 
-def test_load_json_file(valid_path):
-    data = load_json_file(valid_path)
+def test_read_parsers(config):
+    data = read_parsers(config)
     assert len(data) != 0
     assert isinstance(data, dict)
-
-
-def test_load_srch_expressions(test_data):
-    data = load_srch_expressions(test_data)
-    assert len(data) != 0
-    assert isinstance(data, list)
-
-    
