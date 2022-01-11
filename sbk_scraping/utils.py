@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import environ
 from sbk_scraping.config import AppConfig
+from json.decoder import JSONDecodeError
 
 
 def ensure_path_exists(path: Path):
@@ -11,11 +12,17 @@ def ensure_path_exists(path: Path):
         raise ValueError(msg)
 
 
-def load_json_file(path: Path):
+def load_json_file(path: Path) -> dict:
     ensure_path_exists(path)
-    with path.open() as file:
-        data = json.load(file)
-    return data
+    try:
+        with path.open() as file:
+            data = json.load(file)
+            return data
+    except JSONDecodeError:
+        msg = '\n*Cause: The json file has invalid content'\
+            '\n*Action: Validate the json file is correct'
+        raise JSONDecodeError(msg, doc=str(path), pos=1)
+        return {}
 
 
 def read_parsers(config) -> dict:
@@ -24,13 +31,3 @@ def read_parsers(config) -> dict:
         path = config.testdata
     data = load_json_file(path/'parsers.json')
     return data
-
-
-#  def load_json_file(path: Path):
-    #  ensure_path_exists(path)
-    #  try:
-        #  with path.open() as file:
-            #  data = json.load(file)
-        #  return data
-    #  except json.decoder.JSONDecodeError:
-        #  print('There is  a problem')

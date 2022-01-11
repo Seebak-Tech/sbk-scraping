@@ -26,18 +26,11 @@ def test_read_parsers(config):
 def test_invalid_content_jsonfile(test_data):
     with pytest.raises(
         json.decoder.JSONDecodeError,
-        match='Expecting value'
+        match='has invalid content'
     ):
         _ = load_json_file(test_data/"invalid_content.json")
 
 
-#  def test_invalid(test_data):
-    #  test_data1 = test_data
-    #  try:
-        #  with test_data1.open() as file:
-            #  data = json.load(file)
-        #  return data
-    #  except json.decoder.JSONDecodeError:
-        #  print('There is  a problem')
-
-
+#  def test_jsonfile(test_data):
+    #  data = load_json_file(test_data/"invalid_content.json")
+    #  assert "hola" == data
