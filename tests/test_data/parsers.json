@@ -19,6 +19,19 @@
             "srch_expression": "span::text"
         }
       ]
+    },
+    {
+      "parser_type": "Json",
+      "srch_expressions": [
+        {
+            "target_field": "title",
+            "srch_expression": ""
+        },
+        {
+            "target_field": "price",
+            "srch_expression": ""
+        }
+      ]
     }
   ]
 }

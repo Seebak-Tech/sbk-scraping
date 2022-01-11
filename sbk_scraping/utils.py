@@ -11,7 +11,7 @@ def ensure_path_exists(path: Path):
         raise ValueError(msg)
 
 
-def load_json_file(path: Path) -> dict:
+def load_json_file(path: Path):
     ensure_path_exists(path)
     with path.open() as file:
         data = json.load(file)
@@ -24,3 +24,13 @@ def read_parsers(config) -> dict:
         path = config.testdata
     data = load_json_file(path/'parsers.json')
     return data
+
+
+#  def load_json_file(path: Path):
+    #  ensure_path_exists(path)
+    #  try:
+        #  with path.open() as file:
+            #  data = json.load(file)
+        #  return data
+    #  except json.decoder.JSONDecodeError:
+        #  print('There is  a problem')
