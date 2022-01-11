@@ -78,14 +78,27 @@ def srch_lst_expressions():
     ]
 
 
-def test_parse(html_str, srch_lst_expressions):
+@pytest.fixture()
+def srch_lst_expressions_type():
+    return [
+        {
+            "expr_type": "xpath",
+        },
+        {
+            "expr_type": "css",
+        }
+    ]
+
+
+def test_parse(html_str, srch_lst_expressions, srch_lst_expressions_type):
     expected = {
         "title": ['A Light in the Attic'],
         "price": ['£51.77']
     }
     html_parser = HtmlXmlParser(
         data_body=html_str,
-        srch_list_expressions=srch_lst_expressions
+        srch_list_expressions=srch_lst_expressions,
+        #  srch_list_expr_type=srch_lst_expressions_type
     )
     result = html_parser.parse()
     assert expected == result
