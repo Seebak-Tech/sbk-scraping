@@ -39,7 +39,6 @@ json_data = {
 
 srch_expr_dict = {
     "target_field": "non-existent",
-    "expr_type": "jmes",
     "srch_expression": "span.dummy"
 }
 
@@ -123,7 +122,6 @@ def test_correct_initialization(json_document, expr_list):
     )
     for idx, srch_expr in enumerate(instance.srch_list_expressions):
         assert srch_expr.target_field == expr_list[idx]['target_field']
-        assert srch_expr.expr_type == expr_list[idx]['expr_type']
         assert srch_expr.srch_expression == expr_list[idx]['srch_expression']
 
     assert 0 < len(instance.srch_list_expressions)

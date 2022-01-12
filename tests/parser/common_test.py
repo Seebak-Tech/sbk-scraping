@@ -2,7 +2,7 @@ import re
 import pytest
 from hypothesis import strategies as st
 from pydantic import ValidationError
-from sbk_scraping.parser.common import SearchExpression
+from sbk_scraping.parser.common import SrchTypeExpression
 
 
 def printable_text_st():
@@ -51,4 +51,4 @@ def test_mandatory_fields(srch_expressions, match_expr):
             ValidationError,
             match=match_expr
     ):
-        _ = SearchExpression(**srch_expressions)
+        _ = SrchTypeExpression(**srch_expressions)

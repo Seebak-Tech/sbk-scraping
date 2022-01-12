@@ -1,8 +1,9 @@
 import pytest
-import environ
 from pydantic import ValidationError
-from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
-from sbk_scraping.config import AppConfig
+from sbk_scraping.parser.scrapy_parser import (
+    HtmlXmlParser,
+    InvalidSrchExprType
+)
 
 
 data_body_html = '<html><body><span>good</span></body></html>'
@@ -78,27 +79,14 @@ def srch_lst_expressions():
     ]
 
 
-@pytest.fixture()
-def srch_lst_expressions_type():
-    return [
-        {
-            "expr_type": "xpath",
-        },
-        {
-            "expr_type": "css",
-        }
-    ]
-
-
-def test_parse(html_str, srch_lst_expressions, srch_lst_expressions_type):
+def test_parse(html_str, srch_lst_expressions):
     expected = {
         "title": ['A Light in the Attic'],
         "price": ['£51.77']
     }
     html_parser = HtmlXmlParser(
         data_body=html_str,
-        srch_list_expressions=srch_lst_expressions,
-        #  srch_list_expr_type=srch_lst_expressions_type
+        srch_list_expressions=srch_lst_expressions
     )
     result = html_parser.parse()
     assert expected == result
@@ -111,3 +99,26 @@ def test_parse_properties(html_str, srch_lst_expressions):
     )
     result = instance.parse()
     assert len(result.keys()) <= len(instance.srch_list_expressions)
+
+
+@pytest.fixture()
+def invalid_type_expression():
+    return [
+        {
+            "target_field": "price",
+            "expr_type": "json",
+            "srch_expression": "//p[@class=\"price_color\"]/text()"
+        }
+    ]
+
+
+def test_parse_type_expression(html_str, invalid_type_expression):
+    instance = HtmlXmlParser(
+        data_body=html_str,
+        srch_list_expressions=invalid_type_expression
+    )
+    with pytest.raises(
+        InvalidSrchExprType,
+        match='expression type is invalid'
+    ):
+        instance.parse()
