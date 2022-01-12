@@ -47,5 +47,5 @@ class SearchExpression(BaseModel):
     expr_description: Optional[str] = None
 
 
-class SearchExpressionType(BaseModel):
+class SrchTypeExpression(SearchExpression):
     expr_type: constr(strip_whitespace=True, regex=r'\w+')

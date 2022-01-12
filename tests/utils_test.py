@@ -1,10 +1,10 @@
 import pytest
-import json
 from pathlib import Path
 from sbk_scraping.utils import (
     ensure_path_exists,
     load_json_file,
-    read_parsers
+    read_parsers,
+    InvalidJsonContent
 )
 
 
@@ -25,12 +25,7 @@ def test_read_parsers(config):
 
 def test_invalid_content_jsonfile(test_data):
     with pytest.raises(
-        json.decoder.JSONDecodeError,
+        InvalidJsonContent,
         match='has invalid content'
     ):
         _ = load_json_file(test_data/"invalid_content.json")
-
-
-#  def test_jsonfile(test_data):
-    #  data = load_json_file(test_data/"invalid_content.json")
-    #  assert "hola" == data
