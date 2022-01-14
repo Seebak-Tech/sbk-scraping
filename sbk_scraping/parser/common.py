@@ -1,6 +1,6 @@
 import abc
 from pydantic import BaseModel as PydanticBaseModel, constr
-from typing import Optional, Any
+from typing import Optional, Any, Literal
 
 
 class BaseModel(PydanticBaseModel):
@@ -23,6 +23,10 @@ class BaseModel(PydanticBaseModel):
                '  *Action: Provide a valid value'
         msg8 = '*Cause: The field value is not a valid dict\n'\
                '  *Action: Provide an a dictionary object'
+        msg9 = '*Cause: The field value ({given}) is invalid\n'\
+               '  *Action: The permitted values are:'\
+               '  ({permitted}), considere this is case sensitive'
+
         error_msg_templates = {
             'value_error.missing': msg1,
             'value_error.str.regex': msg2,
@@ -32,12 +36,18 @@ class BaseModel(PydanticBaseModel):
             'value_error.any_str.min_length': msg6,
             'type_error.str': msg7,
             'type_error.dict': msg8,
+            'value_error.const': msg9
         }
 
 
 class HttpResponseParser(abc.ABC):
     @abc.abstractmethod
     def parse(self) -> Any:
+        pass
+
+
+class NullParser(HttpResponseParser):
+    def parse(self):
         pass
 
 
@@ -48,4 +58,4 @@ class SearchExpression(BaseModel):
 
 
 class SrchTypeExpression(SearchExpression):
-    expr_type: constr(strip_whitespace=True, regex=r'\w+')
+    expr_type: Literal['xpath', 'css']

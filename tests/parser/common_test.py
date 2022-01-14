@@ -13,14 +13,19 @@ def printable_text_st():
     )
 
 
-def qry_expression_st(text_st=printable_text_st()):
+def expr_type_st():
+    return st.one_of(st.just('xpath'), st.just('css'))
+
+
+def qry_expression_st(text_st=printable_text_st(), type_st=expr_type_st()):
     qry_expressions_st = st.fixed_dictionaries(
         mapping={
             'target_field': text_st,
-            'expr_type': text_st,
             'srch_expression': text_st
         },
-        optional={'expr_description': text_st}
+        optional={'expr_description': text_st,
+                  'expr_type': type_st,
+                  }
     )
     return qry_expressions_st
 
@@ -29,26 +34,50 @@ def srch_expr_list_st(qry_expressions=qry_expression_st()):
     return st.lists(qry_expressions, min_size=1)
 
 
+srch_expr_wthout_trgt = {
+    "expr_type": "xpath",
+    "srch_expression": "//span/text()"
+}
+
+srch_expr_wthout_expr_typ = {
+    "target_field": "precio",
+    "srch_expression": "//span/text()"
+}
+
+srch_expr_wthout_expr = {
+    "target_field": "precio",
+    "expr_type": 'xpath',
+}
+
+srch_expr_invalid_expr_type = {
+    "target_field": "precio",
+    "expr_type": 'json',
+    "srch_expression": "//span/text()"
+}
+
+validations_to_try = [
+    (srch_expr_wthout_trgt, r".*This field is mandatory*"),
+    (srch_expr_wthout_expr_typ, r".*This field is mandatory*"),
+    (srch_expr_wthout_expr, r".*This field is mandatory*"),
+    (srch_expr_invalid_expr_type, r".*The permitted values are*"),
+]
+
+validation_ids = [
+    "Miss target_field",
+    "Miss expr_type field",
+    "Miss srch_expressions field",
+    "Invalid expresion type",
+]
+
+
 @pytest.mark.parametrize(
-    ('srch_expressions', 'match_expr'),
-    (
-        (
-            {'target_field': 'names', 'expr_type': 'jmes'},
-            r".*srch_expression*"
-        ),
-        (
-            {'expr_type': 'jmes', 'srch_expression': 'people[*].first'},
-            r".*target_field*"
-        ),
-        (
-            {'target_field': 'name', 'srch_expression': 'people[*].first'},
-            r".*expr_type*"
-        ),
-    ),
+    'srch_lst_expr, match_msg',
+    validations_to_try,
+    ids=validation_ids
 )
-def test_mandatory_fields(srch_expressions, match_expr):
+def test_mandatory_fields(srch_lst_expr, match_msg):
     with pytest.raises(
             ValidationError,
-            match=match_expr
+            match=match_msg
     ):
-        _ = SrchTypeExpression(**srch_expressions)
+        _ = SrchTypeExpression(**srch_lst_expr)

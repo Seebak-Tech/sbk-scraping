@@ -11,8 +11,8 @@ def ensure_path_exists(path: Path):
 
 
 class InvalidJsonContent(Exception):
-    def __init__(self, mensaje):
-        Exception.__init__(self, mensaje)
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
 
 
 def load_json_file(path: Path) -> dict:
@@ -27,9 +27,15 @@ def load_json_file(path: Path) -> dict:
         raise InvalidJsonContent(msg)
 
 
-def read_parsers(config) -> dict:
+def load_parsers() -> dict:
+    from sbk_scraping.config import AppConfig
+    import environ
+
+    config = environ.to_config(AppConfig)
     path = config.rootdir
+
     if config.env.name == 'TEST':
         path = config.testdata
     data = load_json_file(path/'parsers.json')
+
     return data

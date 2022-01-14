@@ -2,7 +2,7 @@
   "parsers":[
     {
       "parser_type": "HtmlXml",
-      "parser_id": "First",
+      "parser_id": "Moni",
       "srch_expressions":[
         {
             "target_field": "title",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "parser_type": "Json",
+      "parser_type": "JSON",
       "parser_id": "Second",
       "srch_expressions": [
         {
@@ -34,29 +34,6 @@
             "srch_expression": ""
         }
       ]
-    },
-    {
-      "parser_type": "JSON",
-      "parser_id": "Third",
-      "srch_expressions": [
-        {
-            "target_field": "title",
-            "srch_expression": ""
-        }
-      ]
-    },
-    {
-      "parser_type": "HtmlXml",
-      "parser_id": "Fourth",
-      "srch_expressions": [
-        {
-          "target_field": "title",
-          "expr_type": "xpath",
-          "srch_expression": "//*[@id=\"content_inner\"]/article//h1/text()"
-        }
-      ]
     }
-
-
   ]
 }

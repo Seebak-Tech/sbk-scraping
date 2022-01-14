@@ -3,7 +3,7 @@ from pathlib import Path
 from sbk_scraping.utils import (
     ensure_path_exists,
     load_json_file,
-    read_parsers,
+    load_parsers,
     InvalidJsonContent
 )
 
@@ -17,8 +17,8 @@ def test_ensure_path_exists():
         _ = ensure_path_exists(invalid_path)
 
 
-def test_read_parsers(config):
-    data = read_parsers(config)
+def test_load_parsers():
+    data = load_parsers()
     assert len(data) != 0
     assert isinstance(data, dict)
 
@@ -29,3 +29,4 @@ def test_invalid_content_jsonfile(test_data):
         match='has invalid content'
     ):
         _ = load_json_file(test_data/"invalid_content.json")
+

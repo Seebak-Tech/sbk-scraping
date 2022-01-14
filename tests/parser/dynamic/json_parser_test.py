@@ -48,17 +48,14 @@ def lst_expressions():
     return [
         {
             "target_field": "foo",
-            "expr_type": 'jmes',
             "srch_expression": "foo.bar"
         },
         {
             "target_field": "first_name",
-            "expr_type": 'jmes',
             "srch_expression": "people[?last=='f'].first"
         },
         {
             "target_field": "non-existent",
-            "expr_type": "jmes",
             "srch_expression": "span"
         }
     ]

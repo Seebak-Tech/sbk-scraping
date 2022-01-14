@@ -1,9 +1,6 @@
 import pytest
 from pydantic import ValidationError
-from sbk_scraping.parser.scrapy_parser import (
-    HtmlXmlParser,
-    InvalidSrchExprType
-)
+from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
 
 
 data_body_html = '<html><body><span>good</span></body></html>'
@@ -52,13 +49,6 @@ def test_validation_error_messages(html_document, srch_lst_expr, match_msg):
 
 
 @pytest.fixture()
-def html_str(test_data):
-    with open(test_data/'book_to_scrape.html') as body_file:
-        body_data = body_file.read()
-    return body_data
-
-
-@pytest.fixture()
 def srch_lst_expressions():
     return [
         {
@@ -99,26 +89,3 @@ def test_parse_properties(html_str, srch_lst_expressions):
     )
     result = instance.parse()
     assert len(result.keys()) <= len(instance.srch_list_expressions)
-
-
-@pytest.fixture()
-def invalid_type_expression():
-    return [
-        {
-            "target_field": "price",
-            "expr_type": "json",
-            "srch_expression": "//p[@class=\"price_color\"]/text()"
-        }
-    ]
-
-
-def test_parse_type_expression(html_str, invalid_type_expression):
-    instance = HtmlXmlParser(
-        data_body=html_str,
-        srch_list_expressions=invalid_type_expression
-    )
-    with pytest.raises(
-        InvalidSrchExprType,
-        match='expression type is invalid'
-    ):
-        instance.parse()
