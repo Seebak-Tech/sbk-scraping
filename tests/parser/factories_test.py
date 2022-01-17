@@ -6,12 +6,12 @@ from sbk_scraping.parser.dynamic.json_parser import JsonParser
 
 htmlxml_parser_id = "First"
 json_parser_id = "Second"
-wrong_parser_type = "Third"
-wrong_parser_id = "wrong id"
+invalid_parser_typ_id = "Third"
+invalid_parser_id = "Wrong ID"
 
 validations_to_try = [
-    (wrong_parser_id, r".*has invalid parser_id*"),
-    (wrong_parser_type, r".*has invalid parser_type*"),
+    (invalid_parser_id, r".*has invalid parser_id*"),
+    (invalid_parser_typ_id, r".*has invalid parser_type*"),
 ]
 
 validation_ids = [
@@ -37,26 +37,26 @@ def test_invalid_parser_values(html_str, parser_id, match_msg):
         _ = parse.build()
 
 
-correct_validations_to_try = [
-    (htmlxml_parser_id, HtmlXmlParser),
-    (json_parser_id, JsonParser),
+tasks_to_try = [
+    ('html_str', htmlxml_parser_id, HtmlXmlParser),
+    ('json_data', json_parser_id, JsonParser),
 ]
 
-correct_validation_ids = [
-    "The parser is an instance of HtmlXmlParser",
-    "The parser_type is an instance of JsonParser",
+tasks_ids = [
+    "Valid HtmlXmlParser instance",
+    "Valid JsonParser instance",
 ]
 
 
 @pytest.mark.parametrize(
-    'parser_id_valid, parser',
-    correct_validations_to_try,
-    ids=correct_validation_ids
+    'data, valid_parser_id, parser',
+    tasks_to_try,
+    ids=tasks_ids
 )
-def test_parser(html_str, parser_id_valid, parser):
+def test_build_parser(data, valid_parser_id, parser, request):
     parse = ParserFactory(
-        data=html_str,
-        parser_id=parser_id_valid,
+        data=request.getfixturevalue(data),
+        parser_id=valid_parser_id,
     )
     instance = parse.build()
     assert isinstance(instance, parser)

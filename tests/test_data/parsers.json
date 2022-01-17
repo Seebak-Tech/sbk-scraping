@@ -5,19 +5,19 @@
       "parser_id": "First",
       "srch_expressions":[
         {
-            "target_field": "title",
-            "expr_type": "xpath",
-            "srch_expression": "//*[@id=\"content_inner\"]/article//h1/text()"
+          "target_field": "title",
+          "expr_type": "xpath",
+          "srch_expression": "//*[@id=\"content_inner\"]/article//h1/text()"
         },
         {
-            "target_field": "price",
-            "expr_type": "xpath",
-            "srch_expression": "//p[@class=\"price_color\"]/text()"
+          "target_field": "price",
+          "expr_type": "xpath",
+          "srch_expression": "//p[@class=\"price_color\"]/text()"
         },
         {
-            "target_field": "non-existent",
-            "expr_type": "css",
-            "srch_expression": "span::text"
+          "target_field": "non-existent",
+          "expr_type": "css",
+          "srch_expression": "span::text"
         }
       ]
     },
@@ -26,12 +26,8 @@
       "parser_id": "Second",
       "srch_expressions":[
         {
-          "target_field": "title",
-          "srch_expression": "parsers.first"
-        },
-        {
-          "target_field": "price",
-          "srch_expression": "parsers.first"
+          "target_field": "first_name",
+          "srch_expression": "people[?last=='f'].first"
         }
       ]
     },
@@ -40,8 +36,8 @@
       "parser_id": "Third",
       "srch_expressions": [
         {
-            "target_field": "title",
-            "srch_expression": ""
+          "target_field": "title",
+          "srch_expression": ""
         }
       ]
     },
@@ -56,7 +52,5 @@
         }
       ]
     }
-
-
   ]
 }

@@ -25,7 +25,7 @@ class ParserFactory():
     def __build_json_parser(self, expressions):
         from sbk_scraping.parser.dynamic.json_parser import JsonParser
         return JsonParser(
-            data_body=self.data,
+            json_document=self.data,
             srch_list_expressions=expressions
         )
 
