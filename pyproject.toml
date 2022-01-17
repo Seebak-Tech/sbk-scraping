@@ -20,6 +20,10 @@ filterwarnings = ["ignore::DeprecationWarning:.*jmespath*"]
 pytest = "^6.0"
 hypothesis = "^6.30.1"
 
+[[tool.poetry.source]]
+name = "pyseebak"
+url = "http://pypi.srvc.seebak.com.mx"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

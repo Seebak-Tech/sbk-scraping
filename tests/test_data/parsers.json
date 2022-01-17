@@ -24,14 +24,14 @@
     {
       "parser_type": "Json",
       "parser_id": "Second",
-      "srch_expressions": [
+      "srch_expressions":[
         {
-            "target_field": "title",
-            "srch_expression": ""
+          "target_field": "title",
+          "srch_expression": "parsers.first"
         },
         {
-            "target_field": "price",
-            "srch_expression": ""
+          "target_field": "price",
+          "srch_expression": "parsers.first"
         }
       ]
     },
