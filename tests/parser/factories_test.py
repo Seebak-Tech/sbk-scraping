@@ -1,7 +1,7 @@
 import pytest
-from sbk_scraping.parser.factories import ParserFactory, InvalidValue
 from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
 from sbk_scraping.parser.dynamic.json_parser import JsonParser
+from sbk_scraping.parser.factories import ParserFactory, InvalidValue
 
 
 htmlxml_parser_id = "First"
@@ -60,3 +60,13 @@ def test_build_parser(data, valid_parser_id, parser, request):
     )
     instance = parse.build()
     assert isinstance(instance, parser)
+
+
+def test_load_logger_config(html_str):
+    parse = ParserFactory(
+        data=html_str,
+        parser_id='First',
+    )
+    parse.build()
+    assert isinstance(instance, HtmlXmlParser)
+

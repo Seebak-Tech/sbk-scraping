@@ -1,8 +1,12 @@
 import jmespath
+import logging
+from sbk_scraping.parser.logger import SetUpLogging
 from typing import Any
-from sbk_scraping.utils import load_parsers
-from sbk_scraping.parser.common import HttpResponseParser, NullParser
 from dataclasses import dataclass
+from sbk_scraping.parser.common import HttpResponseParser, NullParser
+from sbk_scraping.utils import load_parsers
+
+SetUpLogging().setup_logging()
 
 
 class InvalidValue(Exception):
@@ -41,18 +45,23 @@ class ParserFactory():
         return conf_parser
 
     def __parser_json(self, conf_parser):
+        logging.info('Build a Json parser')
         return self.__build_json_parser(conf_parser['srch_expressions'])
 
     def __parser_htmlxml(self, conf_parser):
-        return self.__build_scrapy_parser(conf_parser['srch_expressions'])
+        build_parser = self.__build_scrapy_parser(conf_parser['srch_expressions'])
+        logging.info('Build a HtmlXml parser')
+        return build_parser
 
     def __build_parser(self, conf_parser) -> HttpResponseParser:
         parser = NullParser()
         parser_type = conf_parser["parser_type"]
 
         if parser_type == "HtmlXml":
+            logging.debug('Build a HtmlXml parser')
             parser = self.__parser_htmlxml(conf_parser)
         elif parser_type == "Json":
+            logging.debug('Build a Json parser')
             parser = self.__parser_json(conf_parser)
         else:
             msg = '\n*Cause: The json file has invalid parser_type'\
@@ -63,4 +72,5 @@ class ParserFactory():
 
     def build(self) -> HttpResponseParser:
         conf_parser = self.__get_config_parser()
+        logging.debug('BUILDED')
         return self.__build_parser(conf_parser)

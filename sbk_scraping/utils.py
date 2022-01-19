@@ -1,6 +1,8 @@
 import json
+import yaml
 from pathlib import Path
 from json.decoder import JSONDecodeError
+from yaml.scanner import ScannerError
 
 
 def ensure_path_exists(path: Path):
@@ -15,6 +17,23 @@ class InvalidJsonContent(Exception):
         Exception.__init__(self, msg)
 
 
+class InvalidYaml(Exception):
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
+
+
+def load_enviroment():
+    from sbk_scraping.config import AppConfig
+    import environ
+
+    config = environ.to_config(AppConfig)
+    path = config.rootdir
+
+    if config.env.name == 'TEST':
+        path = config.testdata
+    return path
+
+
 def load_json_file(path: Path) -> dict:
     ensure_path_exists(path)
     try:
@@ -27,15 +46,23 @@ def load_json_file(path: Path) -> dict:
         raise InvalidJsonContent(msg)
 
 
+def load_yaml_file(path: Path) -> dict:
+    ensure_path_exists(path)
+    try:
+        with path.open() as file:
+            data = yaml.safe_load(file)
+        return data
+    except ScannerError:
+        msg = '\n*Cause: The yaml file is invalid'\
+            '\n*Action: Validate that the yaml file is correct'
+        raise InvalidYaml(msg)
+
+
 def load_parsers() -> dict:
-    from sbk_scraping.config import AppConfig
-    import environ
+    path = load_enviroment()
+    return load_json_file(path/'parsers.json')
 
-    config = environ.to_config(AppConfig)
-    path = config.rootdir
 
-    if config.env.name == 'TEST':
-        path = config.testdata
-    data = load_json_file(path/'parsers.json')
-
-    return data
+def load_logger_config() -> dict:
+    path = load_enviroment()
+    return load_yaml_file(path/'logging_config.yaml')
