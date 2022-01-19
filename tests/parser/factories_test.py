@@ -68,5 +68,3 @@ def test_load_logger_config(html_str):
         parser_id='First',
     )
     parse.build()
-    assert isinstance(instance, HtmlXmlParser)
-

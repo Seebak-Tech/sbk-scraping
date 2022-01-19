@@ -1,11 +1,11 @@
 import logging.config
 import logging
-from sbk_scraping.utils import load_logger_config, load_enviroment
+from sbk_scraping.utils import load_logger_config, get_workdir
 
 
 class SetUpLogging():
     def __init__(self):
-        self.default_config = load_enviroment()/'logging_config.yaml'
+        self.default_config = get_workdir()/'logging_config.yaml'
 
     def setup_logging(self, default_level=logging.info):
         path = self.default_config
