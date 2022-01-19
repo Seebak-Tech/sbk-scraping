@@ -3,6 +3,7 @@ import yaml
 from pathlib import Path
 from json.decoder import JSONDecodeError
 from yaml.scanner import ScannerError
+from yaml.parser import ParserError
 
 
 def ensure_path_exists(path: Path):
@@ -12,17 +13,12 @@ def ensure_path_exists(path: Path):
         raise ValueError(msg)
 
 
-class InvalidJsonContent(Exception):
+class InvalidSyntaxFile(Exception):
     def __init__(self, msg):
         Exception.__init__(self, msg)
 
 
-class InvalidYaml(Exception):
-    def __init__(self, msg):
-        Exception.__init__(self, msg)
-
-
-def load_enviroment():
+def get_workdir() -> Path:
     from sbk_scraping.config import AppConfig
     import environ
 
@@ -43,7 +39,7 @@ def load_json_file(path: Path) -> dict:
     except JSONDecodeError:
         msg = '\n*Cause: The json file has invalid content'\
             '\n*Action: Validate that the json file is correct'
-        raise InvalidJsonContent(msg)
+        raise InvalidSyntaxFile(msg)
 
 
 def load_yaml_file(path: Path) -> dict:
@@ -52,17 +48,17 @@ def load_yaml_file(path: Path) -> dict:
         with path.open() as file:
             data = yaml.safe_load(file)
         return data
-    except ScannerError:
-        msg = '\n*Cause: The yaml file is invalid'\
+    except (ScannerError, ParserError):
+        msg = f'\n*Cause: YAML file has a syntax error in ({path})'\
             '\n*Action: Validate that the yaml file is correct'
-        raise InvalidYaml(msg)
+        raise InvalidSyntaxFile(msg)
 
 
 def load_parsers() -> dict:
-    path = load_enviroment()
-    return load_json_file(path/'parsers.json')
+    workdir = get_workdir()
+    return load_json_file(workdir/'parsers.json')
 
 
 def load_logger_config() -> dict:
-    path = load_enviroment()
-    return load_yaml_file(path/'logging_config.yaml')
+    workdir = get_workdir()
+    return load_yaml_file(workdir/'logging_config.yaml')

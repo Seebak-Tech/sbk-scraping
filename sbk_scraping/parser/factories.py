@@ -45,11 +45,14 @@ class ParserFactory():
         return conf_parser
 
     def __parser_json(self, conf_parser):
+        parser = self.__build_json_parser(conf_parser['srch_expressions'])
         logging.info('Build a Json parser')
-        return self.__build_json_parser(conf_parser['srch_expressions'])
+        return parser
 
     def __parser_htmlxml(self, conf_parser):
-        build_parser = self.__build_scrapy_parser(conf_parser['srch_expressions'])
+        build_parser = self.__build_scrapy_parser(
+            conf_parser['srch_expressions']
+        )
         logging.info('Build a HtmlXml parser')
         return build_parser
 
@@ -58,10 +61,10 @@ class ParserFactory():
         parser_type = conf_parser["parser_type"]
 
         if parser_type == "HtmlXml":
-            logging.debug('Build a HtmlXml parser')
+            logging.info('The parser type is HtmlXml  ')
             parser = self.__parser_htmlxml(conf_parser)
         elif parser_type == "Json":
-            logging.debug('Build a Json parser')
+            logging.info('The parser type is Json')
             parser = self.__parser_json(conf_parser)
         else:
             msg = '\n*Cause: The json file has invalid parser_type'\

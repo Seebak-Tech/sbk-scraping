@@ -4,8 +4,7 @@ from sbk_scraping.utils import (
     ensure_path_exists,
     load_json_file,
     load_parsers,
-    InvalidJsonContent,
-    InvalidYaml,
+    InvalidSyntaxFile,
     load_yaml_file,
     load_logger_config
 )
@@ -28,7 +27,7 @@ def test_load_parsers():
 
 def test_invalid_content_jsonfile(test_data):
     with pytest.raises(
-        InvalidJsonContent,
+        InvalidSyntaxFile,
         match='has invalid content'
     ):
         _ = load_json_file(test_data/"invalid_content.json")
@@ -36,10 +35,11 @@ def test_invalid_content_jsonfile(test_data):
 
 def test_invalid_yaml_file(test_data):
     with pytest.raises(
-        InvalidYaml,
-        match='yaml file is invalid'
+        InvalidSyntaxFile,
+        match=' has a syntax error in'
     ):
         _ = load_yaml_file(test_data/"book_to_scrape.html")
+
 
 def test_load_logger_config():
     logger_config = load_logger_config()
