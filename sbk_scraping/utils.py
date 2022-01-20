@@ -4,6 +4,7 @@ from pathlib import Path
 from json.decoder import JSONDecodeError
 from yaml.scanner import ScannerError
 from yaml.parser import ParserError
+from typing import Dict
 
 
 def ensure_path_exists(path: Path):
@@ -30,7 +31,7 @@ def get_workdir() -> Path:
     return path
 
 
-def load_json_file(path: Path) -> dict:
+def load_json_file(path: Path) -> Dict:
     ensure_path_exists(path)
     try:
         with path.open() as file:
@@ -42,7 +43,7 @@ def load_json_file(path: Path) -> dict:
         raise InvalidSyntaxFile(msg)
 
 
-def load_yaml_file(path: Path) -> dict:
+def load_yaml_file(path: Path) -> Dict:
     ensure_path_exists(path)
     try:
         with path.open() as file:
@@ -54,11 +55,31 @@ def load_yaml_file(path: Path) -> dict:
         raise InvalidSyntaxFile(msg)
 
 
-def load_parsers() -> dict:
+def load_parsers() -> Dict:
     workdir = get_workdir()
-    return load_json_file(workdir/'parsers.json')
+    return load_json_file(workdir/'config'/'parsers.json')
 
 
-def load_logger_config() -> dict:
+def load_logger_config() -> Dict:
     workdir = get_workdir()
-    return load_yaml_file(workdir/'logging_config.yaml')
+    return load_yaml_file(workdir/'config'/'logging_config.yaml')
+
+
+def get_logger(logger_name: str):
+    import logging.config
+    import logging
+    dict_config = load_logger_config()
+    logging.config.dictConfig(dict_config)
+    return logging.getLogger(logger_name)
+
+
+#  Sustituir load_parsers() y load_logger_config() por solamente load_config_file()
+#  Función para el load_file mandar llamar al factory, file_loader.load()
+#  file_loader = FileLoaderFactory(workdir/arch).build()
+#  file_loader.load()
+#
+#  def load_config_file(file_name):
+    #  workdir = get_workdir()
+    #  file_loader = FileLoaderFactory(workdir/file_name).build()
+    #  return file_loader.load()
+
