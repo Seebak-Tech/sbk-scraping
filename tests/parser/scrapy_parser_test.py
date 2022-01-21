@@ -6,9 +6,9 @@ from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
 data_body_html = '<html><body><span>good</span></body></html>'
 
 srch_expr_dummy = {
-    "target_field": "precio",
+    "target_id": "precio",
     "expr_type": 'xpath',
-    "srch_expression": "//span/text()"
+    "srchex": "//span/text()"
 }
 
 task_to_try = [
@@ -52,19 +52,19 @@ def test_validation_error_messages(html_document, srch_lst_expr, match_msg):
 def srch_lst_expressions():
     return [
         {
-            "target_field": "title",
+            "target_id": "title",
             "expr_type": "xpath",
-            "srch_expression": "//*[@id=\"content_inner\"]/article//h1/text()"
+            "srchex": "//*[@id=\"content_inner\"]/article//h1/text()"
         },
         {
-            "target_field": "price",
+            "target_id": "price",
             "expr_type": "xpath",
-            "srch_expression": "//p[@class=\"price_color\"]/text()"
+            "srchex": "//p[@class=\"price_color\"]/text()"
         },
         {
-            "target_field": "non-existent",
+            "target_id": "non-existent",
             "expr_type": "css",
-            "srch_expression": "span::text"
+            "srchex": "span::text"
         }
     ]
 

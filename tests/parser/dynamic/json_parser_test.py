@@ -38,8 +38,8 @@ json_data = {
 }
 
 srch_expr_dict = {
-    "target_field": "non-existent",
-    "srch_expression": "span.dummy"
+    "target_id": "non-existent",
+    "srchex": "span.dummy"
 }
 
 
@@ -47,21 +47,21 @@ srch_expr_dict = {
 def lst_expressions():
     return [
         {
-            "target_field": "foo",
-            "srch_expression": "foo.bar"
+            "target_id": "foo",
+            "srchex": "foo.bar"
         },
         {
-            "target_field": "first_name",
-            "srch_expression": "people[?last=='f'].first"
+            "target_id": "first_name",
+            "srchex": "people[?last=='f'].first"
         },
         {
-            "target_field": "non-existent",
-            "srch_expression": "span"
+            "target_id": "non-existent",
+            "srchex": "span"
         }
     ]
 
 
-def test_jmes_parse(lst_expressions):
+def test_json_parser(lst_expressions):
     expected = {
         "first_name": ["Jayden"],
         "foo": "baz"
@@ -118,8 +118,8 @@ def test_correct_initialization(json_document, expr_list):
         srch_list_expressions=expr_list
     )
     for idx, srch_expr in enumerate(instance.srch_list_expressions):
-        assert srch_expr.target_field == expr_list[idx]['target_field']
-        assert srch_expr.srch_expression == expr_list[idx]['srch_expression']
+        assert srch_expr.target_id == expr_list[idx]['target_id']
+        assert srch_expr.srchex == expr_list[idx]['srchex']
 
     assert 0 < len(instance.srch_list_expressions)
     assert bool(instance.json_document)

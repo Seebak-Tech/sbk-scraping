@@ -14,11 +14,11 @@ class HtmlXmlParser(cmn.BaseModel, cmn.HttpResponseParser):
 
         for expression in self.srch_list_expressions:
             if expression.expr_type == 'xpath':
-                field_value = parser.xpath(expression.srch_expression).getall()
+                field_value = parser.xpath(expression.srchex).getall()
             elif expression.expr_type == 'css':
-                field_value = parser.css(expression.srch_expression).getall()
+                field_value = parser.css(expression.srchex).getall()
             if field_value in [None, '', []]:
                 continue
-            result[expression.target_field] = field_value
+            result[expression.target_id] = field_value
 
         return result
