@@ -20,8 +20,8 @@ def expr_type_st():
 def qry_expression_st(text_st=printable_text_st(), type_st=expr_type_st()):
     qry_expressions_st = st.fixed_dictionaries(
         mapping={
-            'target_field': text_st,
-            'srch_expression': text_st
+            'target_id': text_st,
+            'srchex': text_st
         },
         optional={'expr_description': text_st,
                   'expr_type': type_st,
@@ -36,23 +36,23 @@ def srch_expr_list_st(qry_expressions=qry_expression_st()):
 
 srch_expr_wthout_trgt = {
     "expr_type": "xpath",
-    "srch_expression": "//span/text()"
+    "srchex": "//span/text()"
 }
 
 srch_expr_wthout_expr_typ = {
-    "target_field": "precio",
-    "srch_expression": "//span/text()"
+    "target_id": "precio",
+    "srchex": "//span/text()"
 }
 
 srch_expr_wthout_expr = {
-    "target_field": "precio",
+    "target_id": "precio",
     "expr_type": 'xpath',
 }
 
 srch_expr_invalid_expr_type = {
-    "target_field": "precio",
+    "target_id": "precio",
     "expr_type": 'json',
-    "srch_expression": "//span/text()"
+    "srchex": "//span/text()"
 }
 
 validations_to_try = [
@@ -63,7 +63,7 @@ validations_to_try = [
 ]
 
 validation_ids = [
-    "Miss target_field",
+    "Miss target_id",
     "Miss expr_type field",
     "Miss srch_expressions field",
     "Invalid expresion type",

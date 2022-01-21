@@ -52,8 +52,8 @@ class NullParser(HttpResponseParser):
 
 
 class SearchExpression(BaseModel):
-    target_field: constr(strip_whitespace=True, regex=r'\w+')
-    srch_expression: constr(strip_whitespace=True, min_length=1)
+    target_id: constr(strip_whitespace=True, regex=r'\w+')
+    srchex: constr(strip_whitespace=True, min_length=1)
     expr_description: Optional[str] = None
 
 
