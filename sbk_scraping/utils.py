@@ -1,10 +1,6 @@
-import json
-import yaml
 from pathlib import Path
-from json.decoder import JSONDecodeError
-from yaml.scanner import ScannerError
-from yaml.parser import ParserError
 from typing import Dict
+from sbk_utils.io.loader import FileHandlerFactory
 
 
 def ensure_path_exists(path: Path):
@@ -12,11 +8,6 @@ def ensure_path_exists(path: Path):
         f'\n*Action: Validate the following Path exists: ({path})'
     if not path.exists():
         raise ValueError(msg)
-
-
-class InvalidSyntaxFile(Exception):
-    def __init__(self, msg):
-        Exception.__init__(self, msg)
 
 
 def get_workdir() -> Path:
@@ -31,55 +22,17 @@ def get_workdir() -> Path:
     return path
 
 
-def load_json_file(path: Path) -> Dict:
-    ensure_path_exists(path)
-    try:
-        with path.open() as file:
-            data = json.load(file)
-        return data
-    except JSONDecodeError:
-        msg = '\n*Cause: The json file has invalid content'\
-            '\n*Action: Validate that the json file is correct'
-        raise InvalidSyntaxFile(msg)
-
-
-def load_yaml_file(path: Path) -> Dict:
-    ensure_path_exists(path)
-    try:
-        with path.open() as file:
-            data = yaml.safe_load(file)
-        return data
-    except (ScannerError, ParserError):
-        msg = f'\n*Cause: YAML file has a syntax error in ({path})'\
-            '\n*Action: Validate that the yaml file is correct'
-        raise InvalidSyntaxFile(msg)
-
-
-def load_parsers() -> Dict:
+def load_config_file(file_name) -> Dict:
     workdir = get_workdir()
-    return load_json_file(workdir/'config'/'parsers.json')
-
-
-def load_logger_config() -> Dict:
-    workdir = get_workdir()
-    return load_yaml_file(workdir/'config'/'logging_config.yaml')
+    file_handler = FileHandlerFactory.build_from_file(
+        workdir/'config'/file_name
+    )
+    return file_handler.load()
 
 
 def get_logger(logger_name: str):
     import logging.config
     import logging
-    dict_config = load_logger_config()
+    dict_config = load_config_file('logging_config.yaml')
     logging.config.dictConfig(dict_config)
     return logging.getLogger(logger_name)
-
-
-#  Sustituir load_parsers() y load_logger_config() por solamente load_config_file()
-#  Función para el load_file mandar llamar al factory, file_loader.load()
-#  file_loader = FileLoaderFactory(workdir/arch).build()
-#  file_loader.load()
-#
-#  def load_config_file(file_name):
-    #  workdir = get_workdir()
-    #  file_loader = FileLoaderFactory(workdir/file_name).build()
-    #  return file_loader.load()
-
