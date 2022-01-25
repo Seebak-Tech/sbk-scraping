@@ -24,8 +24,10 @@ def get_workdir() -> Path:
 
 def load_config_file(file_name) -> Dict:
     workdir = get_workdir()
-    file_handler = FileHandlerFactory.build_from_file(workdir/'config'/file_name)
-    return file_handler.load
+    file_handler = FileHandlerFactory.build_from_file(
+        workdir/'config'/file_name
+    )
+    return file_handler.load()
 
 
 def get_logger(logger_name: str):
