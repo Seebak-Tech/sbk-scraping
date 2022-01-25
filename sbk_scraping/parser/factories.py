@@ -2,7 +2,7 @@ import jmespath
 from typing import Union
 from dataclasses import dataclass
 from sbk_scraping.parser.common import HttpResponseParser, NullParser
-from sbk_scraping.utils import load_parsers, get_logger
+from sbk_scraping.utils import get_logger, load_config_file
 
 
 logger = get_logger(__name__)
@@ -37,7 +37,7 @@ class ParserFactory():
     def __get_config_parser(self) -> dict:
         jmes_expr = f"parsers[?parser_id=='{self.parser_id}'] | [0]"
         conf_parser = jmespath.search(
-            expression=jmes_expr, data=load_parsers()
+            expression=jmes_expr, data=load_config_file('parsers.json')
         )
         if conf_parser is None:
             msg = '\n*Cause: The json file has invalid parser_id'\

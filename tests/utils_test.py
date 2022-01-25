@@ -1,13 +1,6 @@
 import pytest
 from pathlib import Path
-from sbk_scraping.utils import (
-    ensure_path_exists,
-    load_json_file,
-    load_parsers,
-    InvalidSyntaxFile,
-    load_yaml_file,
-    load_logger_config
-)
+from sbk_scraping.utils import ensure_path_exists, load_config_file
 
 
 def test_ensure_path_exists():
@@ -19,29 +12,6 @@ def test_ensure_path_exists():
         _ = ensure_path_exists(invalid_path)
 
 
-def test_load_parsers():
-    data = load_parsers()
-    assert len(data) != 0
+def test_load_file():
+    data = load_config_file('parsers.json')
     assert isinstance(data, dict)
-
-
-def test_invalid_content_jsonfile(test_data):
-    with pytest.raises(
-        InvalidSyntaxFile,
-        match='has invalid content'
-    ):
-        _ = load_json_file(test_data/"invalid_content.json")
-
-
-def test_invalid_yaml_file(test_data):
-    with pytest.raises(
-        InvalidSyntaxFile,
-        match=' has a syntax error in'
-    ):
-        _ = load_yaml_file(test_data/"book_to_scrape.html")
-
-
-def test_load_logger_config():
-    logger_config = load_logger_config()
-    assert len(logger_config) != 0
-    assert isinstance(logger_config, dict)
