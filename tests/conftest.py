@@ -1,6 +1,7 @@
 import pytest
 import environ
 from sbk_scraping.config import AppConfig
+from sbk_scraping.utils import load_parsers
 
 
 @pytest.fixture(scope="session")
@@ -29,6 +30,31 @@ def json_data(test_data):
     return body_data
 
 
-@pytest.fixture(scope="session", params=[html_str, json_data])
-def data_file(request):
-    return request.param
+@pytest.fixture(scope="session")
+def parsers_config():
+    return load_parsers()
+
+
+@pytest.fixture(scope="session")
+def parser_dict():
+    return {
+        "parser_type": "HtmlXml",
+        "parser_id": "First",
+        "srch_expressions": [
+            {
+              "target_id": "title",
+              "expr_type": "xpath",
+              "srchex": "//*[@id=\"{}\"]/article//h1/text()"
+            },
+            {
+              "target_id": "price",
+              "expr_type": "xpath",
+              "srchex": "//p[@class=\"price_color\"]/text()"
+            },
+            {
+              "target_id": "non-existent",
+              "expr_type": "css",
+              "srchex": "span::text"
+            }
+        ]
+    }

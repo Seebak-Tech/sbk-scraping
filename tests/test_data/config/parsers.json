@@ -7,7 +7,7 @@
         {
           "target_id": "title",
           "expr_type": "xpath",
-          "srchex": "//*[@id=\"content_inner\"]/article//h1/text()"
+          "srchex": "//*[@id=\"{}\"]/article//h1/text()"
         },
         {
           "target_id": "price",

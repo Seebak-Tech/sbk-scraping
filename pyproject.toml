@@ -4,6 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Emmanuel Martínez <emartinez@seebak.com.mx>"]
 
+[[tool.poetry.source]]
+name = "pyseebak"
+url = "http://pypi.srvc.seebak.com.mx"
+
 [tool.poetry.dependencies]
 python = "^3.9"
 jmespath = "^0.10.0"
