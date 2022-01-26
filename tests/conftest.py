@@ -1,7 +1,7 @@
 import pytest
 import environ
 from sbk_scraping.config import AppConfig
-from sbk_scraping.utils import load_parsers
+from sbk_scraping.utils import load_config_file
 
 
 @pytest.fixture(scope="session")
@@ -32,7 +32,7 @@ def json_data(test_data):
 
 @pytest.fixture(scope="session")
 def parsers_config():
-    return load_parsers()
+    return load_config_file(file_name='parsers.json')
 
 
 @pytest.fixture(scope="session")
