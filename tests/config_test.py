@@ -1,4 +1,5 @@
-from sbk_scraping.config import AppConfig, ParserConfig, InvalidValue
+from sbk_scraping.config import AppConfig, ParserConfig
+from sbk_scraping.parser.common import InvalidValue
 import pytest
 import environ
 import os

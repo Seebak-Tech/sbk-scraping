@@ -1,6 +1,6 @@
 from typing import Union
 from dataclasses import dataclass
-from sbk_scraping.parser.common import HttpResponseParser, NullParser
+from sbk_scraping.parser.common import HttpResponseParser, InvalidValue
 from sbk_scraping.utils import get_logger
 from sbk_scraping.config import ParserConfig
 
@@ -16,6 +16,13 @@ class ParserFactory():
     @classmethod
     def build_from_config(cls, config_dict: dict):
         return cls(ParserConfig(config_dict))
+
+    def __build_null_parser(self, config_dict: dict,
+                            data: Union[str, dict]):
+        msg = '\n*Cause: The json file has invalid parser_type'\
+            '\n*Action: The valid values for parser_type are'\
+            ' (HtmlXml, Json)'
+        raise InvalidValue(msg)
 
     def __build_scrapy_parser(self,
                               config_dict: dict,
@@ -50,4 +57,7 @@ class ParserFactory():
             "HtmlXml": self.__build_scrapy_parser,
             "Json": self.__build_json_parser
         }
-        return switcher.get(parser_type, NullParser)(parser_dict, data)
+        return switcher.get(
+            parser_type,
+            self.__build_null_parser
+        )(parser_dict, data)

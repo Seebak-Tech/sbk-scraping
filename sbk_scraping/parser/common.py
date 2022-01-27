@@ -1,7 +1,6 @@
 import abc
 from pydantic import BaseModel as PydanticBaseModel, constr
 from typing import Optional, Any, Literal
-from dataclasses import dataclass
 
 
 class BaseModel(PydanticBaseModel):
@@ -50,17 +49,6 @@ class HttpResponseParser(abc.ABC):
     @abc.abstractmethod
     def parse(self) -> Any:
         pass
-
-
-@dataclass()
-class NullParser(HttpResponseParser):
-
-    @classmethod
-    def parse(cls, conf, data):
-        msg = '\n*Cause: The json file has invalid parser_type'\
-            '\n*Action: The valid values for parser_type are'\
-            ' (HtmlXml, Json)'
-        raise InvalidValue(msg)
 
 
 class SearchExpression(BaseModel):

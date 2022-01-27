@@ -3,6 +3,7 @@ import enum
 import attr
 from pathlib import Path
 from attrs import define, field, validators
+from sbk_scraping.parser.common import InvalidValue
 
 
 def ensure_path_exists(instance, atribute, path):
@@ -47,11 +48,6 @@ class AppConfig:
     )
 
     env = environ.var(default="test", converter=Env)
-
-
-class InvalidValue(Exception):
-    def __init__(self, msg):
-        Exception.__init__(self, msg)
 
 
 @define()
