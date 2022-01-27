@@ -2,7 +2,7 @@ from hypothesis import given
 from tests.parser.common_test import srch_expr_list_st
 from sbk_scraping.config import AppConfig, ParserConfig, InvalidValue
 import sbk_scraping.constants as cnst
-from sbk_scraping.parser.common import InvalidValue
+from sbk_scraping.utils import load_config_file
 import pytest
 import environ
 import os
@@ -83,10 +83,11 @@ def test_get_srchex(parsers_config):
         parser_conf.get_srchex(parser_id='invalid_id', target_id='price')
 
 
-def test_set_srchex(parsers_config):
+def test_set_srchex():
     expected_srchex = '//*[@id=\"content_inner\"]/article//h1/text()'
 
-    parser_config = ParserConfig(parsers_config)
+    parsers_dict = load_config_file(file_name=cnst.PARSER_FILE_NAME)
+    parser_config = ParserConfig(parsers_dict)
     parser_config.set_srchex(
         parser_id='First',
         target_id='title',
@@ -117,8 +118,9 @@ def test_set_srchex(parsers_config):
 
 
 @given(srch_list_expr=srch_expr_list_st())
-def test_add_srch_expression(parsers_config, srch_list_expr):
-    parser_config = ParserConfig(parsers_config)
+def test_add_srch_expression(srch_list_expr):
+    parsers_dict = load_config_file(file_name=cnst.PARSER_FILE_NAME)
+    parser_config = ParserConfig(parsers_dict)
     size = len(
         parser_config.
         get_parser_config(parser_id="First")
