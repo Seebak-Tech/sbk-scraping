@@ -1,4 +1,4 @@
-from sbk_scraping.config import AppConfig, ParserConfig
+from sbk_scraping.config import AppConfig, ParserConfig, InvalidValue
 import pytest
 import environ
 import os
@@ -28,9 +28,37 @@ def test_config():
     assert env_var == str(config.testdata)
 
 
-def test_get_parser_by_id(parsers_config, parser_dict):
+config_to_try = [
+    ({}, r".*The keys: \[('\w+')+\] should exists*"),
+    (1, r".*The parsers configuration should be an a dict*")
+]
+
+test_ids = [
+    "Invalid keys from configuration dict",
+    "Invalid data type"
+]
+
+
+@pytest.mark.parametrize(
+    'config_data, match_msg',
+    config_to_try,
+    ids=test_ids
+)
+def test_init_validation_errors(config_data, match_msg):
+    with pytest.raises(
+            InvalidValue,
+            match=match_msg):
+        _ = ParserConfig(config_data)
+
+
+def test_get_parser_config(parsers_config, parser_dict):
     parser_conf = ParserConfig(parsers_config)
     assert parser_dict == parser_conf.get_parser_config(parser_id="First")
+    with pytest.raises(
+            InvalidValue,
+            match=r".*Validate that the parser_id is correct*"):
+
+        parser_conf.get_parser_config(parser_id='invalid_parser_id')
 
 
 def test_get_srchex(parsers_config):
@@ -41,6 +69,14 @@ def test_get_srchex(parsers_config):
         parser_id='First',
         target_id='price'
     )
+    with pytest.raises(
+            InvalidValue,
+            match=r".*Validate that both ids are correct*"):
+        parser_conf.get_srchex(parser_id='First', target_id='invalid_id')
+    with pytest.raises(
+            InvalidValue,
+            match=r".*Validate that both ids are correct*"):
+        parser_conf.get_srchex(parser_id='invalid_id', target_id='price')
 
 
 def test_set_srchex(parsers_config):
@@ -56,9 +92,45 @@ def test_set_srchex(parsers_config):
         parser_id='First',
         target_id='title'
     )
-#
-#
-#
-#
-#  def test_add_srch_expression(parsers_config):
-#      assert False
+    with pytest.raises(
+            InvalidValue,
+            match=r".*Validate that the parser_id is correct*"):
+
+        parser_config.set_srchex(
+            parser_id='invalid_id',
+            target_id='title',
+            srchex='//*[@id=\"{}\"]/article//h1/text()'
+        )
+    with pytest.raises(
+            InvalidValue,
+            match=r".*Validate that the target_id is correct*"):
+
+        parser_config.set_srchex(
+            parser_id='First',
+            target_id='invalid_id',
+            srchex='//*[@id=\"{}\"]/article//h1/text()'
+        )
+
+
+def test_add_srch_expression(parsers_config):
+    srch_expression = {
+        "target_id": 'host',
+        "expr_type": 'xpath',
+        "srchex": "//*/article"
+    }
+    parser_config = ParserConfig(parsers_config)
+    size = len(
+        parser_config.
+        get_parser_config(parser_id="First")
+        ['srch_expressions']
+    )
+    parser_config.add_srch_expression(
+        parser_id='First',
+        **srch_expression
+    )
+    after_add_size = len(
+        parser_config.
+        get_parser_config(parser_id="First")
+        ['srch_expressions']
+    )
+    assert after_add_size == size + 1
