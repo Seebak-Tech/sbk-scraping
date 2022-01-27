@@ -48,7 +48,7 @@ jobs:
     - name: Set SBK_WORKSPACE env variable
       run: echo "SBK_WORKSPACE=/home/runner/work/sbk-scraping" >> $GITHUB_ENV         
     - name: Set SBK_ENV env variable
-      run: echo "SBK_ENV=test" >> $GITHUB_ENV         
+      run: echo "SBK_ENV=TEST" >> $GITHUB_ENV         
       #----------------------------------------------
       #              run test suite   
       #----------------------------------------------  
