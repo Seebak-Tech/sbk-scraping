@@ -587,7 +587,7 @@ reference = "pyseebak"
 
 [[package]]
 name = "prompt-toolkit"
-version = "3.0.24"
+version = "3.0.26"
 description = "Library for building powerful interactive command lines in Python"
 category = "main"
 optional = false
@@ -835,7 +835,7 @@ reference = "pyseebak"
 
 [[package]]
 name = "sbk-utils"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 category = "main"
 optional = false
@@ -1080,7 +1080,7 @@ reference = "pyseebak"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3434ff0e0f286394f00f2242a672b3c5ea3845a6f59cb5288af65063b140a30c"
+content-hash = "3d2f7f93a05369c27618d9d9f2e9595014ad5ba20c1f0844706fd65c757d4759"
 
 [metadata.files]
 appnope = [
@@ -1347,8 +1347,8 @@ priority = [
     {file = "priority-1.3.0.tar.gz", hash = "sha256:6bc1961a6d7fcacbfc337769f1a382c8e746566aaa365e78047abe9f66b2ffbe"},
 ]
 prompt-toolkit = [
-    {file = "prompt_toolkit-3.0.24-py3-none-any.whl", hash = "sha256:e56f2ff799bacecd3e88165b1e2f5ebf9bcd59e80e06d395fa0cc4b8bd7bb506"},
-    {file = "prompt_toolkit-3.0.24.tar.gz", hash = "sha256:1bb05628c7d87b645974a1bad3f17612be0c29fa39af9f7688030163f680bad6"},
+    {file = "prompt_toolkit-3.0.26-py3-none-any.whl", hash = "sha256:4bcf119be2200c17ed0d518872ef922f1de336eb6d1ddbd1e089ceb6447d97c6"},
+    {file = "prompt_toolkit-3.0.26.tar.gz", hash = "sha256:a51d41a6a45fd9def54365bca8f0402c8f182f2b6f7e29c74d55faeb9fb38ac4"},
 ]
 protego = [
     {file = "Protego-0.1.16.tar.gz", hash = "sha256:a682771bc7b51b2ff41466460896c1a5a653f9a1e71639ef365a72e66d8734b4"},
@@ -1473,8 +1473,8 @@ queuelib = [
     {file = "queuelib-1.6.2.tar.gz", hash = "sha256:4b207267f2642a8699a1f806045c56eb7ad1a85a10c0e249884580d139c2fcd2"},
 ]
 sbk-utils = [
-    {file = "sbk-utils-0.1.0.tar.gz", hash = "md5:1a31441b1d4c5404f022b7cc812f2974"},
-    {file = "sbk_utils-0.1.0-py3-none-any.whl", hash = "md5:784d5dc511d67e21d0a560b361387fb3"},
+    {file = "sbk-utils-0.1.1.tar.gz", hash = "md5:d70716f85b0067398a17f0251409541a"},
+    {file = "sbk_utils-0.1.1-py3-none-any.whl", hash = "md5:0d39d13c208ce933726bd9127d8a658e"},
 ]
 scrapy = [
     {file = "Scrapy-2.5.1-py2.py3-none-any.whl", hash = "sha256:1a9a36970004950ee3c519a14c4db945f9d9a63fecb3d593dddcda477331dde9"},
