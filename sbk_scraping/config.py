@@ -2,7 +2,7 @@ import environ
 import enum
 import attr
 from pathlib import Path
-from dataclasses import dataclass, field
+from attrs import define, field, validators
 
 
 def ensure_path_exists(instance, atribute, path):
@@ -54,30 +54,54 @@ class InvalidValue(Exception):
         Exception.__init__(self, msg)
 
 
-@dataclass()
+@define()
 class ParserConfig:
-    parsers_config: dict = field(default_factory=dict)
+    parsers_config: dict = field(default={})
+
+    @parsers_config.validator
+    def _validate_params(self, attribute, value) -> None:
+        self.__is_instance_of(value, attribute.type)
+        self.__fit_dictionary_keys(value)
+
+    def __is_instance_of(self, value, attribute_type):
+        if not isinstance(value, attribute_type):
+            attr_type = attribute_type.__name__
+            msg = "\n*Cause: The parsers configuration should be"\
+                  f" an a {attr_type} object"\
+                  "\nAction: Pass the the appropiate type"
+            raise InvalidValue(msg)
+
+    def __fit_dictionary_keys(self, value):
+        if "parsers" not in value:
+            msg = "\n*Cause: The keys: ['parsers'] should exists "\
+                  "in the configuration"\
+                  "\n*Action: Add the appropiate keys to the config dictionary"
+            raise InvalidValue(msg)
+
+    def __raise_invalid_parse_id(self, parser_id: str) -> None:
+        msg = f"\n*Cause: The parser_id: ['{parser_id}'] wasn't found"\
+              "\n*Action: Validate that the parser_id is correct"
+        raise InvalidValue(msg)
+
+    def __raise_invalid_target_id(self, target_id: str) -> None:
+        msg = f"\n*Cause: The target_id: ['{target_id}'] wasn't found"\
+              "\n*Action: Validate that the target_id is correct"
+        raise InvalidValue(msg)
 
     def __find_parser_idx(self, parser_id: str) -> int:
-        parser_idx = None
-
+        parser_idx = -1
         for idx, parser in enumerate(self.parsers_config['parsers']):
             if parser['parser_id'] == parser_id:
                 parser_idx = idx
                 break
 
-        if parser_idx is None:
-            msg = '\n*Cause: The configuration for Parser:{parser_id} '\
-                  'was not found'\
-                  '\n*Action: Validate that the parser id is correct'
-
-            raise InvalidValue(msg)
+        if parser_idx == -1:
+            self.__raise_invalid_parse_id(parser_id)
 
         return parser_idx
 
     def __find_srch_expr_idx(self, parser_idx: int, target_id: str) -> int:
-        srch_expr_idx = None
-
+        srch_expr_idx = -1
         for idx, srch_expr in enumerate(
             self.parsers_config['parsers'][parser_idx]['srch_expressions']
         ):
@@ -85,13 +109,8 @@ class ParserConfig:
                 srch_expr_idx = idx
                 break
 
-        if srch_expr_idx is None:
-            msg = '\n*Cause: The srchex was not set because the '\
-                  f'target_id:{target_id} were not found'\
-                  '\n*Action: Validate that the target_id of the '\
-                  'search_expressions is correct'
-
-            raise InvalidValue(msg)
+        if srch_expr_idx == -1:
+            self.__raise_invalid_target_id(target_id)
 
         return srch_expr_idx
 
@@ -104,9 +123,7 @@ class ParserConfig:
             data=self.parsers_config
         )
         if conf_parser is None:
-            msg = '\n*Cause: The object has an invalid parser_id'\
-                  '\n*Action: Validate that the parser_id is correct'
-            raise InvalidValue(msg)
+            self.__raise_invalid_parse_id(parser_id)
         return conf_parser
 
     def set_srchex(self, parser_id: str, target_id: str, srchex: str) -> None:
@@ -132,12 +149,15 @@ class ParserConfig:
             data=self.parsers_config
         )
         if result is None:
-            msg = '\n*Cause: The object was not found with '\
-                  f'the parser_id:{parser_id} and target_id:{target_id}'\
-                  '\n*Action: Validate that both ids are correct'
+            msg = f"\n*Cause: The object with the parser_id: ['{parser_id}']"\
+                  " or target_id: ['{target_id}'] wasn't found"\
+                  "\n*Action: Validate that both ids are correct"
             raise InvalidValue(msg)
 
         return result
 
-    #  def add_srch_expression(self, parser_id: str, **kwargs) -> None:
-    #      pass
+    def add_srch_expression(self, parser_id: str, **kwargs) -> None:
+        parser_idx = self.__find_parser_idx(parser_id)
+        (self.parsers_config['parsers']
+                            [parser_idx]
+                            ['srch_expressions'].append(kwargs))
