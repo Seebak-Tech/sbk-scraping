@@ -1,4 +1,7 @@
+from hypothesis import given
+from tests.parser.common_test import srch_expr_list_st
 from sbk_scraping.config import AppConfig, ParserConfig, InvalidValue
+import sbk_scraping.constants as cnst
 import pytest
 import environ
 import os
@@ -19,11 +22,11 @@ def test_config():
     config = environ.to_config(AppConfig)
     env_var = os.environ.get(
         "SBK_WORKSPACE",
-        '/workspace'
+        cnst.DEFAULT_WORKSPACE
     ) + "/" + os.environ.get(
         "SBK_PROJECTNAME",
-        'sbk-scraping'
-    ) + "/" + "tests/test_data"
+        cnst.PROJECT_NAME
+    ) + "/" + cnst.TEST_DATA_PATH
 
     assert env_var == str(config.testdata)
 
@@ -112,25 +115,23 @@ def test_set_srchex(parsers_config):
         )
 
 
-def test_add_srch_expression(parsers_config):
-    srch_expression = {
-        "target_id": 'host',
-        "expr_type": 'xpath',
-        "srchex": "//*/article"
-    }
+@given(srch_list_expr=srch_expr_list_st())
+def test_add_srch_expression(parsers_config, srch_list_expr):
     parser_config = ParserConfig(parsers_config)
     size = len(
         parser_config.
         get_parser_config(parser_id="First")
-        ['srch_expressions']
+        [cnst.CONFIG_SRCH_LST_EXPR_KEY]
     )
-    parser_config.add_srch_expression(
-        parser_id='First',
-        **srch_expression
-    )
+    for srch_expression in srch_list_expr:
+        parser_config.add_srch_expression(
+            parser_id='First',
+            **srch_expression
+        )
+
     after_add_size = len(
         parser_config.
         get_parser_config(parser_id="First")
-        ['srch_expressions']
+        [cnst.CONFIG_SRCH_LST_EXPR_KEY]
     )
-    assert after_add_size == size + 1
+    assert after_add_size == size + len(srch_list_expr)

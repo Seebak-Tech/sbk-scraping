@@ -1,4 +1,5 @@
 import sbk_scraping.parser.common as cmn
+import sbk_scraping.constants as cnst
 from pydantic import conlist, constr
 
 
@@ -13,9 +14,9 @@ class HtmlXmlParser(cmn.BaseModel, cmn.HttpResponseParser):
         parser = Selector(text=self.data_body)
 
         for expression in self.srch_list_expressions:
-            if expression.expr_type == 'xpath':
+            if expression.expr_type == cnst.XPATH_TYPE:
                 field_value = parser.xpath(expression.srchex).getall()
-            elif expression.expr_type == 'css':
+            elif expression.expr_type == cnst.CSS_TYPE:
                 field_value = parser.css(expression.srchex).getall()
             if field_value in [None, '', []]:
                 continue

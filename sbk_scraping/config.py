@@ -1,8 +1,10 @@
 import environ
 import enum
 import attr
+import sbk_scraping.constants as cnst
+
 from pathlib import Path
-from attrs import define, field, validators
+from attrs import define, field
 
 
 def ensure_path_exists(instance, atribute, path):
@@ -13,21 +15,21 @@ def ensure_path_exists(instance, atribute, path):
 
 
 class Env(enum.Enum):
-    PROD = "production"
-    DEV = "development"
-    TEST = "test"
+    PROD = cnst.ENVIRONMENT_PROD
+    DEV = cnst.ENVIRONMENT_DEV
+    TEST = cnst.ENVIRONMENT_TEST
 
 
-@environ.config(prefix='SBK')
+@environ.config(prefix=cnst.PROJECT_PREFIX)
 class AppConfig:
 
     workspace = environ.var(
-        default='/workspace',
+        default=cnst.DEFAULT_WORKSPACE,
         converter=Path,
         validator=ensure_path_exists
     )
 
-    projectname = environ.var(default='sbk-scraping')
+    projectname = environ.var(default=cnst.PROJECT_NAME)
 
     rootdir = environ.var(
         default=attr.Factory(
@@ -40,13 +42,13 @@ class AppConfig:
 
     testdata = environ.var(
         default=attr.Factory(
-            lambda self: self.rootdir/'tests'/'test_data',
+            lambda self: self.rootdir/cnst.TEST_DATA_PATH,
             takes_self=True
         ),
         validator=ensure_path_exists
     )
 
-    env = environ.var(default="test", converter=Env)
+    env = environ.var(default=cnst.ENVIRONMENT_TEST, converter=Env)
 
 
 class InvalidValue(Exception):
@@ -72,9 +74,9 @@ class ParserConfig:
             raise InvalidValue(msg)
 
     def __fit_dictionary_keys(self, value):
-        if "parsers" not in value:
-            msg = "\n*Cause: The keys: ['parsers'] should exists "\
-                  "in the configuration"\
+        if cnst.CONFIG_PARSERS_KEY not in value:
+            msg = f"\n*Cause: The keys: ['{cnst.CONFIG_PARSERS_KEY}'] should "\
+                  "exists in the configuration"\
                   "\n*Action: Add the appropiate keys to the config dictionary"
             raise InvalidValue(msg)
 
@@ -89,27 +91,33 @@ class ParserConfig:
         raise InvalidValue(msg)
 
     def __find_parser_idx(self, parser_id: str) -> int:
-        parser_idx = -1
-        for idx, parser in enumerate(self.parsers_config['parsers']):
-            if parser['parser_id'] == parser_id:
+        parser_idx = cnst.INVALID_INDEX_LST
+        for idx, parser in enumerate(self
+                                     .parsers_config
+                                     [cnst.CONFIG_PARSERS_KEY]):
+            if parser[cnst.CONFIG_PARSER_ID_KEY] == parser_id:
                 parser_idx = idx
                 break
 
-        if parser_idx == -1:
+        if parser_idx == cnst.INVALID_INDEX_LST:
             self.__raise_invalid_parse_id(parser_id)
 
         return parser_idx
 
     def __find_srch_expr_idx(self, parser_idx: int, target_id: str) -> int:
-        srch_expr_idx = -1
+        srch_expr_idx = cnst.INVALID_INDEX_LST
         for idx, srch_expr in enumerate(
-            self.parsers_config['parsers'][parser_idx]['srch_expressions']
+            self
+            .parsers_config
+            [cnst.CONFIG_PARSERS_KEY]
+            [parser_idx]
+            [cnst.CONFIG_SRCH_LST_EXPR_KEY]
         ):
-            if srch_expr['target_id'] == target_id:
+            if srch_expr[cnst.CONFIG_TARGET_ID_KEY] == target_id:
                 srch_expr_idx = idx
                 break
 
-        if srch_expr_idx == -1:
+        if srch_expr_idx == cnst.INVALID_INDEX_LST:
             self.__raise_invalid_target_id(target_id)
 
         return srch_expr_idx
@@ -130,11 +138,11 @@ class ParserConfig:
 
         parser_idx = self.__find_parser_idx(parser_id)
         srch_expr_idx = self.__find_srch_expr_idx(parser_idx, target_id)
-        (self.parsers_config['parsers']
+        (self.parsers_config[cnst.CONFIG_PARSERS_KEY]
                             [parser_idx]
-                            ['srch_expressions']
+                            [cnst.CONFIG_SRCH_LST_EXPR_KEY]
                             [srch_expr_idx]
-                            ['srchex']) = srchex
+                            [cnst.CONFIG_SRCH_EXPR_KEY]) = srchex
 
     def get_srchex(self, parser_id: str, target_id: str) -> str:
         import jmespath
@@ -158,6 +166,6 @@ class ParserConfig:
 
     def add_srch_expression(self, parser_id: str, **kwargs) -> None:
         parser_idx = self.__find_parser_idx(parser_id)
-        (self.parsers_config['parsers']
+        (self.parsers_config[cnst.CONFIG_PARSERS_KEY]
                             [parser_idx]
-                            ['srch_expressions'].append(kwargs))
+                            [cnst.CONFIG_SRCH_LST_EXPR_KEY].append(kwargs))
