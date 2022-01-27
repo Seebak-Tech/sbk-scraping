@@ -21,7 +21,7 @@ INVALID_INDEX_LST = -1
 
 # CONFIG FILES
 LOGGER_FILE_NAME = 'logging_config.yaml'
-PARSER_FILE_NAME = 'parsers.json'
+PARSER_FILE_NAME = 'parsers.yaml'
 
 # Environment Constants
 ENVIRONMENT_DEV = 'DEV'

@@ -1,6 +1,7 @@
 import pytest
 from pathlib import Path
 from sbk_scraping.utils import ensure_path_exists, load_config_file
+import sbk_scraping.constants as cnst
 
 
 def test_ensure_path_exists():
@@ -13,5 +14,5 @@ def test_ensure_path_exists():
 
 
 def test_load_file():
-    data = load_config_file('parsers.json')
+    data = load_config_file(cnst.PARSER_FILE_NAME)
     assert isinstance(data, dict)

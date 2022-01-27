@@ -1,0 +1,29 @@
+parsers:
+- parser_type: HtmlXml
+  parser_id: First
+  srch_expressions:
+  - target_id: title
+    expr_type: xpath
+    srchex: //*[@id="{}"]/article//h1/text()
+  - target_id: price
+    expr_type: xpath
+    srchex: //p[@class="price_color"]/text()
+  - target_id: non-existent
+    expr_type: css
+    srchex: span::text
+- parser_type: Json
+  parser_id: Second
+  srch_expressions:
+  - target_id: first_name
+    srchex: people[?last=='f'].first
+- parser_type: JSON
+  parser_id: Third
+  srch_expressions:
+  - target_id: title
+    srchex: ''
+- parser_type: HtmlXml
+  parser_id: Fourth
+  srch_expressions:
+  - target_id: title
+    expr_type: xpath
+    srchex: //*[@id="content_inner"]/article//h1/text()
