@@ -1,10 +1,10 @@
 import sbk_scraping.parser.common as cmn
 import sbk_scraping.constants as cnst
-from pydantic import conlist, constr
+from pydantic import conlist, Field
 
 
 class HtmlXmlParser(cmn.BaseModel, cmn.HttpResponseParser):
-    data_body: constr(min_length=1)
+    data_body: str = Field(repr=False, min_length=1)
     srch_list_expressions: conlist(cmn.SrchTypeExpression, min_items=1)
 
     def parse(self) -> dict:

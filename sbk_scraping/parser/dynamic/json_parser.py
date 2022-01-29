@@ -1,10 +1,10 @@
 import sbk_scraping.parser.common as cmn
-from pydantic import conlist
+from pydantic import conlist, Field
 
 
 class JsonParser(cmn.BaseModel, cmn.HttpResponseParser):
 
-    json_document: dict
+    json_document: dict = Field(repr=False)
     srch_list_expressions: conlist(cmn.SearchExpression, min_items=1)
 
     def parse(self) -> dict:
