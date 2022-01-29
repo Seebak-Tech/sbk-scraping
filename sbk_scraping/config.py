@@ -160,8 +160,13 @@ class ParserConfig:
 
         return result
 
-    def add_srch_expression(self, parser_id: str, **kwargs) -> None:
+    def add_srch_expression(self, parser_id: str,
+                            srch_expr_dict: dict) -> None:
         parser_idx = self.__find_parser_idx(parser_id)
-        (self.parsers_config[cnst.CONFIG_PARSERS_KEY]
-                            [parser_idx]
-                            [cnst.CONFIG_SRCH_LST_EXPR_KEY].append(kwargs))
+
+        (self
+         .parsers_config
+         [cnst.CONFIG_PARSERS_KEY]
+         [parser_idx]
+         [cnst.CONFIG_SRCH_LST_EXPR_KEY]
+         .append(srch_expr_dict))

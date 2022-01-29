@@ -129,7 +129,7 @@ def test_add_srch_expression(srch_list_expr):
     for srch_expression in srch_list_expr:
         parser_config.add_srch_expression(
             parser_id='First',
-            **srch_expression
+            srch_expr_dict=srch_expression
         )
 
     after_add_size = len(
