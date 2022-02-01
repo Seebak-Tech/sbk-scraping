@@ -62,3 +62,15 @@ class ParserFactory():
             parser_type,
             self.__build_null_parser
         )(parser_dict, data)
+
+    def get_parser_config(self, parser_id: str) -> dict:
+        return self.config.get_parser_config(parser_id)
+
+    def set_srchex(self, parser_id: str, target_id: str, srchex: str) -> None:
+        return self.config.set_srchex(parser_id, target_id, srchex)
+
+    def get_srchex(self, parser_id: str, target_id: str) -> str:
+        return self.config.get_srchex(parser_id, target_id)
+
+    def add_srch_expression(self, parser_id: str, **kwargs) -> None:
+        return self.config.add_srch_expression(parser_id, **kwargs)
