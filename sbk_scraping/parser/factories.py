@@ -51,7 +51,7 @@ class ParserFactory():
                      data: Union[dict, str],
                      parser_id: str) -> HttpResponseParser:
 
-        parser_dict = self.config.get_parser_config(parser_id)
+        parser_dict = self.get_parser_config(parser_id)
         parser_type = parser_dict[cnst.CONFIG_PARSER_TYPE_KEY]
 
         switcher = {
