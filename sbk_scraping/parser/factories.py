@@ -1,15 +1,16 @@
 from typing import Union
-from dataclasses import dataclass
-from sbk_scraping.parser.common import HttpResponseParser, InvalidValue
+#  from dataclasses import dataclass
+from sbk_scraping.parser.common import HttpResponseParser
 from sbk_scraping.utils import get_logger
 from sbk_scraping.config import ParserConfig
 import sbk_scraping.constants as cnst
+from attrs import define
 
 
 logger = get_logger(__name__)
 
 
-@dataclass
+@define()
 class ParserFactory():
 
     config: ParserConfig
@@ -23,7 +24,7 @@ class ParserFactory():
         msg = '\n*Cause: The json file has invalid parser_type'\
             '\n*Action: The valid values for parser_type are'\
             ' (HtmlXml, Json)'
-        raise InvalidValue(msg)
+        raise ValueError(msg)
 
     def __build_scrapy_parser(self,
                               config_dict: dict,
@@ -51,7 +52,7 @@ class ParserFactory():
                      data: Union[dict, str],
                      parser_id: str) -> HttpResponseParser:
 
-        parser_dict = self.config.get_parser_config(parser_id)
+        parser_dict = self.get_parser_config(parser_id)
         parser_type = parser_dict[cnst.CONFIG_PARSER_TYPE_KEY]
 
         switcher = {
@@ -62,3 +63,16 @@ class ParserFactory():
             parser_type,
             self.__build_null_parser
         )(parser_dict, data)
+
+    def get_parser_config(self, parser_id: str) -> dict:
+        return self.config.get_parser_config(parser_id)
+
+    def set_srchex(self, parser_id: str, target_id: str, srchex: str) -> None:
+        return self.config.set_srchex(parser_id, target_id, srchex)
+
+    def get_srchex(self, parser_id: str, target_id: str) -> str:
+        return self.config.get_srchex(parser_id, target_id)
+
+    def add_srch_expression(self, parser_id: str,
+                            srch_expr_dict: dict) -> None:
+        self.config.add_srch_expression(parser_id, srch_expr_dict)

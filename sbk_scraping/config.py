@@ -56,7 +56,7 @@ class ParserConfig:
     parsers_config: dict = field(default={})
 
     @parsers_config.validator
-    def __validate_params(self, attribute, value) -> None:
+    def validate_params(self, attribute, value) -> None:
         from sbk_utils.data.validators import validate_dict_keys
 
         self.__is_instance_of(value, attribute.type)
