@@ -1,6 +1,6 @@
 from hypothesis import given
 from tests.parser.common_test import srch_expr_list_st
-from sbk_scraping.config import AppConfig, ParserConfig, InvalidValue
+from sbk_scraping.config import AppConfig, ParserConfig
 import sbk_scraping.constants as cnst
 from sbk_scraping.utils import load_config_file
 import pytest
@@ -33,7 +33,7 @@ def test_config():
 
 
 config_to_try = [
-    ({}, r".*The keys: \[('\w+')+\] should exists*"),
+    ({}, r".*The dictionary must contain the following*"),
     (1, r".*The parsers configuration should be an a dict*")
 ]
 
@@ -50,7 +50,7 @@ test_ids = [
 )
 def test_init_validation_errors(config_data, match_msg):
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=match_msg):
         _ = ParserConfig(config_data)
 
@@ -59,7 +59,7 @@ def test_get_parser_config(parsers_config, parser_dict):
     parser_conf = ParserConfig(parsers_config)
     assert parser_dict == parser_conf.get_parser_config(parser_id="First")
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=r".*Validate that the parser_id is correct*"):
 
         parser_conf.get_parser_config(parser_id='invalid_parser_id')
@@ -74,11 +74,11 @@ def test_get_srchex(parsers_config):
         target_id='price'
     )
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=r".*Validate that both ids are correct*"):
         parser_conf.get_srchex(parser_id='First', target_id='invalid_id')
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=r".*Validate that both ids are correct*"):
         parser_conf.get_srchex(parser_id='invalid_id', target_id='price')
 
@@ -98,7 +98,7 @@ def test_set_srchex():
         target_id='title'
     )
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=r".*Validate that the parser_id is correct*"):
 
         parser_config.set_srchex(
@@ -107,7 +107,7 @@ def test_set_srchex():
             srchex='//*[@id=\"{}\"]/article//h1/text()'
         )
     with pytest.raises(
-            InvalidValue,
+            ValueError,
             match=r".*Validate that the target_id is correct*"):
 
         parser_config.set_srchex(

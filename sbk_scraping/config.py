@@ -5,7 +5,6 @@ import sbk_scraping.constants as cnst
 
 from pathlib import Path
 from attrs import define, field
-from sbk_scraping.parser.common import InvalidValue
 
 
 def ensure_path_exists(instance, atribute, path):
@@ -57,9 +56,15 @@ class ParserConfig:
     parsers_config: dict = field(default={})
 
     @parsers_config.validator
-    def _validate_params(self, attribute, value) -> None:
+    def __validate_params(self, attribute, value) -> None:
+        from sbk_utils.data.validators import validate_dict_keys
+
         self.__is_instance_of(value, attribute.type)
-        self.__fit_dictionary_keys(value)
+        #  self.__fit_dictionary_keys(value)
+        validate_dict_keys(
+            srch_dict=value,
+            valid_keys=cnst.CONFIG_KEYS
+        )
 
     def __is_instance_of(self, value, attribute_type):
         if not isinstance(value, attribute_type):
@@ -67,24 +72,24 @@ class ParserConfig:
             msg = "\n*Cause: The parsers configuration should be"\
                   f" an a {attr_type} object"\
                   "\nAction: Pass the the appropiate type"
-            raise InvalidValue(msg)
+            raise ValueError(msg)
 
-    def __fit_dictionary_keys(self, value):
-        if cnst.CONFIG_PARSERS_KEY not in value:
-            msg = f"\n*Cause: The keys: ['{cnst.CONFIG_PARSERS_KEY}'] should "\
-                  "exists in the configuration"\
-                  "\n*Action: Add the appropiate keys to the config dictionary"
-            raise InvalidValue(msg)
+    #  def __fit_dictionary_keys(self, value):
+    #      if cnst.CONFIG_PARSERS_KEY not in value:
+    #          msg = f"\n*Cause: The keys: ['{cnst.CONFIG_PARSERS_KEY}'] should "\
+    #                "exists in the configuration"\
+    #                "\n*Action: Add the appropiate keys to the config dictionary"
+    #          raise ValueError(msg)
 
     def __raise_invalid_parse_id(self, parser_id: str) -> None:
         msg = f"\n*Cause: The parser_id: ['{parser_id}'] wasn't found"\
               "\n*Action: Validate that the parser_id is correct"
-        raise InvalidValue(msg)
+        raise ValueError(msg)
 
     def __raise_invalid_target_id(self, target_id: str) -> None:
         msg = f"\n*Cause: The target_id: ['{target_id}'] wasn't found"\
               "\n*Action: Validate that the target_id is correct"
-        raise InvalidValue(msg)
+        raise ValueError(msg)
 
     def __find_parser_idx(self, parser_id: str) -> int:
         parser_idx = cnst.INVALID_INDEX_LST
@@ -156,7 +161,7 @@ class ParserConfig:
             msg = f"\n*Cause: The object with the parser_id: ['{parser_id}']"\
                   " or target_id: ['{target_id}'] wasn't found"\
                   "\n*Action: Validate that both ids are correct"
-            raise InvalidValue(msg)
+            raise ValueError(msg)
 
         return result
 
