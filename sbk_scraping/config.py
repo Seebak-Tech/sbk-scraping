@@ -56,11 +56,10 @@ class ParserConfig:
     parsers_config: dict = field(default={})
 
     @parsers_config.validator
-    def validate_params(self, attribute, value) -> None:
+    def validate_config(self, attribute, value) -> None:
         from sbk_utils.data.validators import validate_dict_keys
 
         self.__is_instance_of(value, attribute.type)
-        #  self.__fit_dictionary_keys(value)
         validate_dict_keys(
             srch_dict=value,
             valid_keys=cnst.CONFIG_KEYS
@@ -73,13 +72,6 @@ class ParserConfig:
                   f" an a {attr_type} object"\
                   "\nAction: Pass the the appropiate type"
             raise ValueError(msg)
-
-    #  def __fit_dictionary_keys(self, value):
-    #      if cnst.CONFIG_PARSERS_KEY not in value:
-    #          msg = f"\n*Cause: The keys: ['{cnst.CONFIG_PARSERS_KEY}'] should "\
-    #                "exists in the configuration"\
-    #                "\n*Action: Add the appropiate keys to the config dictionary"
-    #          raise ValueError(msg)
 
     def __raise_invalid_parse_id(self, parser_id: str) -> None:
         msg = f"\n*Cause: The parser_id: ['{parser_id}'] wasn't found"\

@@ -67,69 +67,52 @@ def test_json_parser(lst_expressions):
         "foo": "baz"
     }
 
-    json_parser = JsonParser(
-        json_document=json_data,
-        srch_list_expressions=lst_expressions
-    )
+    json_parser = JsonParser(srch_list_expressions=lst_expressions)
 
-    result = json_parser.parse()
+    result = json_parser.parse(data=json_data)
     assert result == expected
 
 
 searches_to_try = [
-    (json_data, [{}], r".*This field is mandatory*"),
-    (json_data, [], r".*The list should have at least*"),
-    (None, [srch_expr_dict], r".*None is not an allowed*"),
-    (json_data, srch_expr_dict, r".*This field is not a valid list*"),
-    (json_data, [None], r".*None is not an allowed*"),
-    (str(' '), [srch_expr_dict], r".*is not a valid dict*"),
+    ([{}], r".*This field is mandatory*"),
+    ([], r".*The list should have at least*"),
+    (srch_expr_dict, r".*This field is not a valid list*"),
+    ([None], r".*None is not an allowed*"),
 ]
 
 test_ids = [
     "Invalid list elements",
     "Invalid number of elements in the list",
-    "Invalid None for data_body",
     "Invalid data type for srch_list_expressions",
     "Invalid None for list elements",
-    "Invalid json_data type",
 ]
 
 
 @pytest.mark.parametrize(
-    'json_document, srch_lst_expr, match_msg',
+    'srch_lst_expr, match_msg',
     searches_to_try,
     ids=test_ids
 )
-def test_validation_errors(json_document, srch_lst_expr, match_msg):
+def test_validation_errors(srch_lst_expr, match_msg):
     with pytest.raises(
             ValidationError,
             match=match_msg
     ):
-        _ = JsonParser(
-            json_document=json_document,
-            srch_list_expressions=srch_lst_expr
-        )
+        _ = JsonParser(srch_list_expressions=srch_lst_expr)
 
 
-@given(json_document=json_document_st(), expr_list=srch_expr_list_st())
-def test_correct_initialization(json_document, expr_list):
-    instance = JsonParser(
-        json_document=json_document,
-        srch_list_expressions=expr_list
-    )
+@given(expr_list=srch_expr_list_st())
+def test_correct_initialization(expr_list):
+    instance = JsonParser(srch_list_expressions=expr_list)
     for idx, srch_expr in enumerate(instance.srch_list_expressions):
         assert srch_expr.target_id == expr_list[idx]['target_id']
         assert srch_expr.srchex == expr_list[idx]['srchex']
 
     assert 0 < len(instance.srch_list_expressions)
-    assert bool(instance.json_document)
 
 
 @given(json_document=json_document_st(), expr_list=srch_expr_list_st())
 def test_parse_properties(json_document, expr_list):
-    instance = JsonParser(
-        json_document=json_document,
-        srch_list_expressions=expr_list
-    )
-    result = instance.parse()
+    instance = JsonParser(srch_list_expressions=expr_list)
+    result = instance.parse(data=json_document)
     assert len(result.keys()) <= len(instance.srch_list_expressions)

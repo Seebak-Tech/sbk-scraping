@@ -1,20 +1,18 @@
 import sbk_scraping.parser.common as cmn
-from pydantic import conlist, Field
+from pydantic import conlist
 
 
 class JsonParser(cmn.BaseModel, cmn.HttpResponseParser):
-
-    json_document: dict = Field(repr=False)
     srch_list_expressions: conlist(cmn.SearchExpression, min_items=1)
 
-    def parse(self) -> dict:
+    def parse(self, data: dict) -> dict:
         import jmespath
         result = {}
 
         for qry_expression in self.srch_list_expressions:
             qry_result = jmespath.search(
                 expression=qry_expression.srchex,
-                data=self.json_document
+                data=data
             )
             if qry_result in ('', None, []):
                 continue

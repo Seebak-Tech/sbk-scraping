@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Dict
 from sbk_utils.io.loader import FileHandlerFactory
 import sbk_scraping.constants as cnst
 
@@ -23,7 +22,7 @@ def get_workdir() -> Path:
     return path
 
 
-def load_config_file(file_name) -> Dict:
+def load_config_file(file_name) -> dict:
     workdir = get_workdir()
     file_handler = FileHandlerFactory.build_from_file(
         workdir/cnst.CONFIG_PATH/file_name
