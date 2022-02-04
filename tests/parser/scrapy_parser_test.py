@@ -12,40 +12,40 @@ srch_expr_dummy = {
 }
 
 task_to_try = [
-    (data_body_html, [{}], r".*This field is mandatory*"),
-    ('', [srch_expr_dummy], r".*This field should contain at least 1 charac*"),
-    (data_body_html, [], r".*The list should have at least*"),
-    (None, [srch_expr_dummy], r".*None is not an allowed*"),
-    (data_body_html, srch_expr_dummy, r".*This field is not a valid list*"),
-    (data_body_html, [None], r".*None is not an allowed*"),
-    ({}, [srch_expr_dummy], r".*This field should be a string*"),
+    ([{}], r".*This field is mandatory*", data_body_html),
+    #  ([srch_expr_dummy], r".*This field should contain at least 1 charac*", ''),
+    ([], r".*The list should have at least*", data_body_html),
+    #  ([srch_expr_dummy], r".*None is not an allowed*", None),
+    (srch_expr_dummy, r".*This field is not a valid list*", data_body_html),
+    ([None], r".*None is not an allowed*", data_body_html),
+    #  ([srch_expr_dummy], r".*This field should be a string*", {}),
 ]
 
 task_ids = [
     "Invalid list elements",
-    "Invalid html str",
+    #  "Invalid html str",
     "Invalid number of elements in the list",
-    "Invalid None for data_body",
+    #  "Invalid None for data",
     "Invalid data type for srch_list_expressions",
     "Invalid None for list elements",
-    "Invalid data_body type",
+    #  "Invalid data type",
 ]
 
 
 @pytest.mark.parametrize(
-    'html_document, srch_lst_expr, match_msg',
+    'srch_lst_expr, match_msg, html_document',
     task_to_try,
     ids=task_ids
 )
-def test_validation_error_messages(html_document, srch_lst_expr, match_msg):
+def test_validation_error_messages(srch_lst_expr, match_msg, html_document):
     with pytest.raises(
             ValidationError,
             match=match_msg
     ):
-        _ = HtmlXmlParser(
-            data_body=html_document,
+        parser = HtmlXmlParser(
             srch_list_expressions=srch_lst_expr
         )
+        _ = parser.parse(data=html_document)
 
 
 @pytest.fixture()
@@ -75,17 +75,15 @@ def test_parse(html_str, srch_lst_expressions):
         "price": ['£51.77']
     }
     html_parser = HtmlXmlParser(
-        data_body=html_str,
         srch_list_expressions=srch_lst_expressions
     )
-    result = html_parser.parse()
+    result = html_parser.parse(data=html_str)
     assert expected == result
 
 
 def test_parse_properties(html_str, srch_lst_expressions):
     instance = HtmlXmlParser(
-        data_body=html_str,
         srch_list_expressions=srch_lst_expressions
     )
-    result = instance.parse()
+    result = instance.parse(data=html_str)
     assert len(result.keys()) <= len(instance.srch_list_expressions)

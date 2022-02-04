@@ -5,6 +5,8 @@ from typing import Optional, Any, Literal
 
 class BaseModel(PydanticBaseModel):
     class Config:
+        extra = 'forbid'
+
         msg1 = '*Cause: This field is mandatory\n'\
                '  *Action: Provide a valid value for this field'
         msg2 = '*Cause: The field value does not match the regex\n'\
@@ -47,7 +49,7 @@ class InvalidValue(Exception):
 
 class HttpResponseParser(abc.ABC):
     @abc.abstractmethod
-    def parse(self) -> Any:
+    def parse(self, data: str) -> Any:
         pass
 
 

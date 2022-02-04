@@ -4,14 +4,14 @@ from pydantic import conlist, Field
 
 
 class HtmlXmlParser(cmn.BaseModel, cmn.HttpResponseParser):
-    data_body: str = Field(repr=False, min_length=1)
+    #  data_body: str = Field(repr=False, min_length=1)
     srch_list_expressions: conlist(cmn.SrchTypeExpression, min_items=1)
 
-    def parse(self) -> dict:
+    def parse(self, data: str) -> dict:
         from scrapy.selector import Selector
         result = {}
         field_value = []
-        parser = Selector(text=self.data_body)
+        parser = Selector(text=data)
 
         for expression in self.srch_list_expressions:
             if expression.expr_type == cnst.XPATH_TYPE:
