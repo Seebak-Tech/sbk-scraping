@@ -17,20 +17,18 @@ def expr_type_st():
     return st.one_of(st.just('xpath'), st.just('css'))
 
 
-def qry_expression_st(text_st=printable_text_st(), type_st=expr_type_st()):
+def srch_expr_json_st(text_st=printable_text_st()):
     qry_expressions_st = st.fixed_dictionaries(
         mapping={
             'target_id': text_st,
             'srchex': text_st
         },
-        optional={'expr_description': text_st,
-                  #  'expr_type': type_st,
-                  }
+        optional={'expr_description': text_st}
     )
     return qry_expressions_st
 
 
-def srch_expr_list_st(qry_expressions=qry_expression_st()):
+def srch_expr_list_st(qry_expressions=srch_expr_json_st()):
     return st.lists(qry_expressions, min_size=1)
 
 

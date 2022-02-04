@@ -13,22 +13,16 @@ srch_expr_dummy = {
 
 task_to_try = [
     ([{}], r".*This field is mandatory*", data_body_html),
-    #  ([srch_expr_dummy], r".*This field should contain at least 1 charac*", ''),
     ([], r".*The list should have at least*", data_body_html),
-    #  ([srch_expr_dummy], r".*None is not an allowed*", None),
     (srch_expr_dummy, r".*This field is not a valid list*", data_body_html),
-    ([None], r".*None is not an allowed*", data_body_html),
-    #  ([srch_expr_dummy], r".*This field should be a string*", {}),
+    ([None], r".*None is not an allowed*", data_body_html)
 ]
 
 task_ids = [
     "Invalid list elements",
-    #  "Invalid html str",
     "Invalid number of elements in the list",
-    #  "Invalid None for data",
     "Invalid data type for srch_list_expressions",
-    "Invalid None for list elements",
-    #  "Invalid data type",
+    "Invalid None for list elements"
 ]
 
 
