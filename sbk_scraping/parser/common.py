@@ -1,6 +1,10 @@
 import abc
 from pydantic import BaseModel as PydanticBaseModel, constr
 from typing import Optional, Any, Literal
+from sbk_scraping.utils import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class BaseModel(PydanticBaseModel):

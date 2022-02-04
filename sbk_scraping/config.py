@@ -2,7 +2,6 @@ import environ
 import enum
 import attr
 import sbk_scraping.constants as cnst
-
 from pathlib import Path
 from attrs import define, field
 

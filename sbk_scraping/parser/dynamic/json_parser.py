@@ -1,5 +1,9 @@
 import sbk_scraping.parser.common as cmn
 from pydantic import conlist
+from sbk_scraping.utils import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class JsonParser(cmn.BaseModel, cmn.HttpResponseParser):
