@@ -24,7 +24,7 @@ def qry_expression_st(text_st=printable_text_st(), type_st=expr_type_st()):
             'srchex': text_st
         },
         optional={'expr_description': text_st,
-                  'expr_type': type_st,
+                  #  'expr_type': type_st,
                   }
     )
     return qry_expressions_st
