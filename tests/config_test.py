@@ -33,8 +33,8 @@ def test_config():
 
 
 config_to_try = [
-    ({}, r".*The dictionary must contain the following*"),
-    (1, r".*The parsers configuration should be an a dict*")
+    ({}, r".*The dictionary must contain all the following*", ValueError),
+    (1, r".*The object must be type of *", TypeError)
 ]
 
 test_ids = [
@@ -44,13 +44,13 @@ test_ids = [
 
 
 @pytest.mark.parametrize(
-    'config_data, match_msg',
+    'config_data, match_msg, error',
     config_to_try,
     ids=test_ids
 )
-def test_init_validation_errors(config_data, match_msg):
+def test_init_validation_errors(config_data, match_msg, error):
     with pytest.raises(
-            ValueError,
+            error,
             match=match_msg):
         _ = ParserConfig(config_data)
 

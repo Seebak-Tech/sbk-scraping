@@ -56,9 +56,14 @@ class ParserConfig:
 
     @parsers_config.validator
     def validate_config(self, attribute, value) -> None:
-        from sbk_utils.data.validators import validate_dict_keys
+        from sbk_utils.data.validators import validate_dict_keys, instance_of
 
-        self.__is_instance_of(value, attribute.type)
+        instance_of(
+            value,
+            attr_type=attribute.type
+        )
+        #  self.__is_instance_of(value, attribute.type)
+
         validate_dict_keys(
             srch_dict=value,
             valid_keys=cnst.CONFIG_KEYS
