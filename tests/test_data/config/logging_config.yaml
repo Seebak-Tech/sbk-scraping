@@ -1,5 +1,5 @@
 version: 1
-disable_existing_loggers: false
+disable_existing_loggers: False
 formatters:
   user:
     format: '[%(asctime)s] %(name)s:%(lineno)d %(levelname)s - %(message)s'
@@ -7,7 +7,7 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler # sends logging output to streams such as sys.stdout, sys.stderr
-    level: ERROR
+    level: DEBUG
     formatter: user
     stream: 'ext://sys.stdout'
   file:
@@ -15,8 +15,6 @@ handlers:
     level: INFO
     formatter: user
     filename: tests/test_data/logs/logs.log
-    maxBytes: 10485760
-    backupCount: 20
     encoding: utf8
 loggers:
   sbk_scraping.parser.factories:  
@@ -24,5 +22,5 @@ loggers:
     handlers: [console, file]
     propagate: no
 root: # root logger
-  level: ERROR
+  level: DEBUG
   handlers: [console]

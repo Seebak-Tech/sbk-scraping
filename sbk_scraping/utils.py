@@ -31,6 +31,10 @@ def load_config_file(file_name) -> dict:
 
 
 def get_logger(logger_name: str):
-    from sbk_utils.logger import Logger
+    from sbk_utils.logger import LoggerFactory
     dict_config = load_config_file(cnst.LOGGER_FILE_NAME)
-    return Logger(logger_name).get_logger(dict_config)
+
+    return LoggerFactory(
+        logger_name=logger_name,
+        config=dict_config
+    ).build()

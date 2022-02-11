@@ -15,4 +15,5 @@ def test_ensure_path_exists():
 
 def test_load_file():
     data = load_config_file(cnst.PARSER_FILE_NAME)
+    logger.info("Test load file")
     assert isinstance(data, dict)
