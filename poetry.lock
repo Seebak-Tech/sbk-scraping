@@ -835,7 +835,7 @@ reference = "pyseebak"
 
 [[package]]
 name = "sbk-utils"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 category = "main"
 optional = false
@@ -1080,7 +1080,7 @@ reference = "pyseebak"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "8a64f4942380c21905fd55765091ac45ddab24f36b110753df5a6a76641fe50e"
+content-hash = "dbc8e23e75c03fb8a59b7cdd988d2787520a05c66fc559e7fb9fd8c4ad1a4ef2"
 
 [metadata.files]
 appnope = [
@@ -1473,8 +1473,8 @@ queuelib = [
     {file = "queuelib-1.6.2.tar.gz", hash = "sha256:4b207267f2642a8699a1f806045c56eb7ad1a85a10c0e249884580d139c2fcd2"},
 ]
 sbk-utils = [
-    {file = "sbk-utils-0.1.4.tar.gz", hash = "md5:fc7324ca82bea27e185f74ddde33be8c"},
-    {file = "sbk_utils-0.1.4-py3-none-any.whl", hash = "md5:6f7e0829e3f207c2336537f3394ae410"},
+    {file = "sbk-utils-0.1.5.tar.gz", hash = "md5:07dc2e57ffc9b6a6acbbc4b06d4d332d"},
+    {file = "sbk_utils-0.1.5-py3-none-any.whl", hash = "md5:1616013fd80a5f1c09c5e97f2e44567d"},
 ]
 scrapy = [
     {file = "Scrapy-2.5.1-py2.py3-none-any.whl", hash = "sha256:1a9a36970004950ee3c519a14c4db945f9d9a63fecb3d593dddcda477331dde9"},
