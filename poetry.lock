@@ -1080,7 +1080,7 @@ reference = "pyseebak"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "dbc8e23e75c03fb8a59b7cdd988d2787520a05c66fc559e7fb9fd8c4ad1a4ef2"
+content-hash = "5c0ca825bd72973d7c21bd45eaf85453785910c08b55010e7303896a11deaae7"
 
 [metadata.files]
 appnope = [
