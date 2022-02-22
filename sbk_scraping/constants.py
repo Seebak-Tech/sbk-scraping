@@ -37,3 +37,6 @@ DEFAULT_WORKSPACE = '/workspace'
 # Parser types
 XPATH_TYPE = 'xpath'
 CSS_TYPE = 'css'
+
+# Regex for HtmlXmlParser
+ATTR_REGEX = 'regex'

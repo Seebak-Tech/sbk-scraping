@@ -1,7 +1,15 @@
 import pytest
 from pydantic import ValidationError
-from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
+from sbk_scraping.parser.scrapy_parser import (
+    HtmlXmlParser,
+    SelectorParser,
+    HtmlXmlSelectorParser,
+    HtmlXmlParserFactory
+)
+from sbk_scraping.utils import get_logger
 
+
+logger = get_logger(__name__)
 
 data_body_html = '<html><body><span>good</span></body></html>'
 
@@ -36,7 +44,7 @@ def test_validation_error_messages(srch_lst_expr, match_msg, html_document):
             ValidationError,
             match=match_msg
     ):
-        parser = HtmlXmlParser(
+        parser = HtmlXmlParserFactory(
             srch_list_expressions=srch_lst_expr
         )
         _ = parser.parse(data=html_document)
@@ -68,7 +76,7 @@ def test_parse(html_str, srch_lst_expressions):
         "title": ['A Light in the Attic'],
         "price": ['£51.77']
     }
-    html_parser = HtmlXmlParser(
+    html_parser = HtmlXmlParserFactory(
         srch_list_expressions=srch_lst_expressions
     )
     result = html_parser.parse(data=html_str)
@@ -76,8 +84,32 @@ def test_parse(html_str, srch_lst_expressions):
 
 
 def test_parse_properties(html_str, srch_lst_expressions):
-    instance = HtmlXmlParser(
+    instance = HtmlXmlParserFactory(
         srch_list_expressions=srch_lst_expressions
     )
     result = instance.parse(data=html_str)
     assert len(result.keys()) <= len(instance.srch_list_expressions)
+
+
+def test_regex_parser(html_str, srch_lst_expressions):
+    regex = r'\d+'
+    expected = {'price': ['51', '77']}
+    result = HtmlXmlParserFactory(
+        srch_list_expressions=srch_lst_expressions,
+        regex=regex
+    ).parse(data=html_str)
+    print(result)
+    assert result == expected
+
+
+def test_invalid_regex_parser(html_str, srch_lst_expressions):
+    match_msg = 'regular expression is invalid'
+    regex = 'hell(o'
+    with pytest.raises(
+            ValidationError,
+            match=match_msg
+    ):
+        _ = HtmlXmlParserFactory(
+            srch_list_expressions=srch_lst_expressions,
+            regex=regex
+        ).parse(data=html_str)

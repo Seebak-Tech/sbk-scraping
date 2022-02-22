@@ -21,6 +21,10 @@ loggers:
     level: DEBUG
     handlers: [console, file]
     propagate: no
+  sbk_scraping.tests.parser.scrapy_parser_test:  
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
 root: # root logger
   level: DEBUG
   handlers: [console]

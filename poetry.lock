@@ -835,7 +835,7 @@ reference = "pyseebak"
 
 [[package]]
 name = "sbk-utils"
-version = "0.1.5"
+version = "0.1.6"
 description = ""
 category = "main"
 optional = false
@@ -1473,8 +1473,8 @@ queuelib = [
     {file = "queuelib-1.6.2.tar.gz", hash = "sha256:4b207267f2642a8699a1f806045c56eb7ad1a85a10c0e249884580d139c2fcd2"},
 ]
 sbk-utils = [
-    {file = "sbk-utils-0.1.5.tar.gz", hash = "md5:07dc2e57ffc9b6a6acbbc4b06d4d332d"},
-    {file = "sbk_utils-0.1.5-py3-none-any.whl", hash = "md5:1616013fd80a5f1c09c5e97f2e44567d"},
+    {file = "sbk-utils-0.1.6.tar.gz", hash = "md5:aa977150d903f6041a409392a3f528d1"},
+    {file = "sbk_utils-0.1.6-py3-none-any.whl", hash = "md5:afcc80d5039b4df11126851ea825e218"},
 ]
 scrapy = [
     {file = "Scrapy-2.5.1-py2.py3-none-any.whl", hash = "sha256:1a9a36970004950ee3c519a14c4db945f9d9a63fecb3d593dddcda477331dde9"},

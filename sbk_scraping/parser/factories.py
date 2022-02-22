@@ -147,10 +147,10 @@ class ParserFactory():
 
     def __build_scrapy_parser(self,
                               config_dict: dict) -> HttpResponseParser:
-        from sbk_scraping.parser.scrapy_parser import HtmlXmlParser
+        from sbk_scraping.parser.scrapy_parser import HtmlXmlParserFactory
         parser_id = config_dict[cnst.CONFIG_PARSER_ID_KEY]
         logger.info(f'Building a HtmlXml parser({parser_id})')
-        return HtmlXmlParser(
+        return HtmlXmlParserFactory(
             srch_list_expressions=config_dict[cnst.CONFIG_SRCH_LST_EXPR_KEY]
         )
 

@@ -32,6 +32,8 @@ class BaseModel(PydanticBaseModel):
         msg9 = '*Cause: The field value ({given}) is invalid\n'\
                '  *Action: The permitted values are:'\
                '  ({permitted}), considere this is case sensitive'
+        msg10 = '*Cause: The regular expression is invalid\n'\
+                '  *Action: Provide a valid regular expression'
 
         error_msg_templates = {
             'value_error.missing': msg1,
@@ -42,7 +44,8 @@ class BaseModel(PydanticBaseModel):
             'value_error.any_str.min_length': msg6,
             'type_error.str': msg7,
             'type_error.dict': msg8,
-            'value_error.const': msg9
+            'value_error.const': msg9,
+            'value_error.regex_pattern': msg10
         }
 
 
