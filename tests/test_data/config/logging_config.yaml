@@ -7,24 +7,24 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler # sends logging output to streams such as sys.stdout, sys.stderr
-    level: DEBUG
+    level: INFO
     formatter: user
     stream: 'ext://sys.stdout'
   file:
-    class: logging.handlers.RotatingFileHandler
-    level: INFO
+    class: logging.FileHandler
+    level: DEBUG
     formatter: user
     filename: tests/test_data/logs/logs.log
     encoding: utf8
 loggers:
   sbk_scraping.parser.factories:  
-    level: DEBUG
+    level: INFO
     handlers: [console, file]
     propagate: no
-  sbk_scraping.tests.parser.scrapy_parser_test:  
-    level: DEBUG
+  sbk_scraping.parser.scrapy_parser:  
+    level: INFO
     handlers: [console, file]
     propagate: no
 root: # root logger
-  level: DEBUG
+  level: ERROR
   handlers: [console]

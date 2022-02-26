@@ -2,7 +2,6 @@ import sbk_scraping.parser.common as cmn
 import sbk_scraping.constants as cnst
 from pydantic import conlist
 from typing import Any, Pattern
-from dataclasses import dataclass
 import abc
 from sbk_scraping.utils import get_logger
 

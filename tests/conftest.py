@@ -16,7 +16,7 @@ def test_data(config):
     return path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def html_str(test_data):
     with open(test_data/'book_to_scrape.html') as body_file:
         body_data = body_file.read()

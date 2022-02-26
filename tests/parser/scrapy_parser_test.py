@@ -1,12 +1,12 @@
 import pytest
 from pydantic import ValidationError
+from sbk_scraping.utils import get_logger
+from hypothesis import given, strategies as st
 from sbk_scraping.parser.scrapy_parser import (
-    HtmlXmlParser,
-    SelectorParser,
     HtmlXmlSelectorParser,
+    RegexSelectorParser,
     HtmlXmlParserFactory
 )
-from sbk_scraping.utils import get_logger
 
 
 logger = get_logger(__name__)
@@ -44,13 +44,13 @@ def test_validation_error_messages(srch_lst_expr, match_msg, html_document):
             ValidationError,
             match=match_msg
     ):
-        parser = HtmlXmlParserFactory(
+        parser = HtmlXmlSelectorParser(
             srch_list_expressions=srch_lst_expr
         )
         _ = parser.parse(data=html_document)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def srch_lst_expressions():
     return [
         {
@@ -76,7 +76,7 @@ def test_parse(html_str, srch_lst_expressions):
         "title": ['A Light in the Attic'],
         "price": ['£51.77']
     }
-    html_parser = HtmlXmlParserFactory(
+    html_parser = HtmlXmlSelectorParser(
         srch_list_expressions=srch_lst_expressions
     )
     result = html_parser.parse(data=html_str)
@@ -84,7 +84,7 @@ def test_parse(html_str, srch_lst_expressions):
 
 
 def test_parse_properties(html_str, srch_lst_expressions):
-    instance = HtmlXmlParserFactory(
+    instance = HtmlXmlSelectorParser(
         srch_list_expressions=srch_lst_expressions
     )
     result = instance.parse(data=html_str)
@@ -94,22 +94,56 @@ def test_parse_properties(html_str, srch_lst_expressions):
 def test_regex_parser(html_str, srch_lst_expressions):
     regex = r'\d+'
     expected = {'price': ['51', '77']}
-    result = HtmlXmlParserFactory(
+    result = RegexSelectorParser(
         srch_list_expressions=srch_lst_expressions,
         regex=regex
     ).parse(data=html_str)
-    print(result)
     assert result == expected
 
 
-def test_invalid_regex_parser(html_str, srch_lst_expressions):
+def test_invalid_rg_parser(html_str, srch_lst_expressions):
     match_msg = 'regular expression is invalid'
     regex = 'hell(o'
     with pytest.raises(
             ValidationError,
             match=match_msg
     ):
-        _ = HtmlXmlParserFactory(
+        _ = RegexSelectorParser(
+            srch_list_expressions=srch_lst_expressions,
+            regex=regex
+        ).parse(data=html_str)
+
+
+def test_parser_factory(html_str, srch_lst_expressions):
+    parser = HtmlXmlParserFactory(
+        srch_list_expressions=srch_lst_expressions,
+    )
+    result = parser.parse(data=html_str)
+    assert isinstance(parser, HtmlXmlParserFactory)
+    assert isinstance(result, dict)
+
+
+def st_data_struct():
+    return st.one_of(
+        st.dictionaries(
+            keys=st.text(),
+            values=st.text(),
+            dict_class=dict, min_size=3
+        ),
+        st.lists(st.integers(min_value=2), min_size=2),
+        st.tuples(st.integers(), st.integers())
+    )
+
+
+@given(regex=st_data_struct())
+def test_str_type_regex(regex, srch_lst_expressions, html_str):
+    match_msg = 'field should be a string'
+    print(regex)
+    with pytest.raises(
+            ValidationError,
+            match=match_msg
+    ):
+        _ = RegexSelectorParser(
             srch_list_expressions=srch_lst_expressions,
             regex=regex
         ).parse(data=html_str)
